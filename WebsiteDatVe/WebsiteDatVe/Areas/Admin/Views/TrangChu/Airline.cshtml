@@ -1,0 +1,159 @@
+﻿@using WebsiteDatVe.Models;
+@model IEnumerable<HangBay>
+@{
+    ViewBag.Title = "Airline";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@{
+    int iDem = 0;
+    int iSLDanhMucTrenTrang = 4;
+    int iTrang = 1;
+}
+<div class="card-table" style="background-color: #f5f7ff; width:100%">
+    <div class="card" style=" margin:24px 16px;">
+        <div class="card-body">
+            <h4 class="card-title">Quản lý hãng bay</h4>
+            <p class="card-description">
+                <a href="/Admin/TrangChu/CreateAirline" class="badge badge-info">
+                    <i class="fas fa-plus" style="margin-right:2px"></i>
+                    Thêm
+                </a>
+            </p>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Mã hãng bay</th>
+                            <th>Logo</th>
+                            <th>Tên hãng bay</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            if (iDem % iSLDanhMucTrenTrang == 0 && iDem != 0)
+                            {
+                                iTrang++;
+                            }
+                            <tr id="@item.MaHangBay" class="@Url.Content("SoTrangChua SoTrang" + iTrang.ToString())">
+                                <td>@item.MaHangBay</td>
+                                <td><img src="@item.Logo" width="150" height="150" alt="" /></td>
+                                <td>@item.TenHangBay</td>
+                                <td>
+                                    <a href="/Admin/TrangChu/EditAirline/@item.MaHangBay" class="badge badge-warning" style="margin-right:2px">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </a>
+                                    <button name="btnXoaHangBay" class="badge badge-danger" style="border:none" >
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            iDem++;
+                        }
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row" style="margin:1rem;">
+            @for (int i = 1; i <= iTrang; i++)
+            {
+                <a class="linkTrang" data-sotrang="@Url.Content("SoTrang" + i)" href="#">@i</a>
+            }
+        </div>
+    </div>
+
+</div>
+<div class="modal" id="modalThongBao">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Xác nhận</h5>
+                <button type="button" class="close" onclick="modalClose()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="btnMess">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnDongYXoa">Đồng ý</button>
+                <button type="button" class="btn btn-secondary" onclick="modalClose()">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .table td img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .SoTrangChua {
+        display: none;
+    }
+
+    .linkTrang {
+        padding: 0.5rem 1rem;
+        border: 1px solid #dee2e6;
+        border-radius: 5px;
+        margin-right: 5px;
+        background-color: #fff;
+        color: black;
+    }
+
+    .SoTrang1 {
+        display: table-row;
+    }
+
+    a:hover {
+        text-decoration: none;
+        background-color: #E7EDF6;
+    }
+
+    a:focus {
+        background-color: #4755AB;
+        color: #fff
+    }
+</style>
+@section jsFooter{
+    <script>
+        var trangthai = 2;
+
+
+        function modalClose() {
+            $('#modalThongBao').hide();
+
+        }
+        $(document).on('click', "button[name='btnXoaHangBay']", function () {
+            //alert('ok')
+            $('#btnMess').empty();
+            $('#btnMess').append('<p>Bạn chắc chắn xóa hãng bay?</p>');
+            $('#modalThongBao').show();
+            ma = $(this).closest('tr').attr('id');
+        });
+        $('#btnDongYXoa').click(function () {
+           // alert('ok')
+            $.ajax({
+                type: 'post',
+                url: '/Admin/TrangChu/DeleteAirline',
+                data: {
+                    mahangbay: ma,
+                },
+                success: function (data) {
+                    if (data.code == 200) {
+                        location.reload();
+                    }
+                }
+
+            });
+        });
+        $('.linkTrang').click(function () {
+            $('.SoTrangChua').hide();
+            var SoTrang = $(this).attr("data-sotrang");
+            $('.' + SoTrang).show();
+        });
+    </script>
+}

@@ -1,0 +1,295 @@
+﻿.booking-wrap {
+    width: 100%;
+    height: 100%;
+    background: var(--light-blue);
+    font-size: 1.6rem;
+    padding: 3rem 17rem;
+}
+
+.booking{
+    display:flex;
+    gap:3rem;
+}
+
+.form-info {
+    background: #fff;
+    border-radius: 0.5rem;
+    box-shadow: rgb(3,18,26,0.2) 0px 1px 2px;
+    width: 100%;
+    padding: 3rem 2rem;
+    margin-top:2rem;
+}
+
+.form-info .title{
+    font-weight:600;
+    margin-bottom:2rem;
+}
+
+.form-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.form-container .control{
+    flex: 1 1 40%;
+}
+
+.form-container .control p{
+    margin-bottom:0.75rem;
+}
+
+.form-container .control input {
+    font-size: 1.6rem;
+    border: solid 1px #ccc;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    width:100%;
+}
+
+.form-container .control input:focus {
+    border: solid 1px var(--blue);
+}
+
+.booking-info{
+    width:70%;
+}
+
+.booking-info .title{
+    margin-top:2rem;
+    font-weight:600;
+    display:flex;
+}
+
+
+.booking-header {
+    background: #fff;
+    border-radius: 0.5rem;
+    box-shadow: rgb(3,18,26,0.2) 0px 1px 2px;
+    width: 100%;
+    padding:2rem;
+}
+
+.form-checkout {
+    width: 30%;
+}
+
+.form-checkout-container {
+    padding: 2rem;
+    background: #fff;
+    border-radius: 0.5rem;
+    box-shadow: rgb(3,18,26,0.2) 0px 1px 2px;
+    width:100%
+}
+
+.form-checkout .row {
+    display: flex;
+    justify-content: space-between;
+    margin: 2rem 0;
+}
+
+.form-checkout .row p {
+    color: var(--light-color);
+    font-size:1.4rem;
+    margin-top:0.75rem;
+}
+
+.form-checkout .row:first-child {
+    margin-top: 0;
+}
+
+.form-checkout .row:last-child {
+    margin-bottom:0;
+}
+
+.form-checkout .row.total{
+    border-top: var(--light-blue) dashed 3px;
+    padding-top:2rem;
+    font-weight:600;
+    font-size:1.8rem;
+}
+
+.form-checkout .row.line{
+    border-top: var(--light-blue) dashed 3px;
+    padding-top:2rem;
+}
+
+.booking .form-submit{
+    width:100%;
+    text-align:center;
+    margin-top:2rem;
+}
+
+.form-method{
+    margin:2rem 0 5rem;
+    display:flex;
+    gap:2rem;
+}
+
+.method-payment {
+    background: #fff;
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    gap: 1rem;
+    box-shadow: rgb(3,18,26,0.2) 0px 1px 2px;
+    cursor:pointer;
+}
+
+.method-payment.active {
+    border: 1px solid var(--blue);
+    font-weight:600;
+}
+
+.method-payment img{
+    width:40px
+}
+
+.ticket-info .p-info {
+    font-size:1.8rem;
+    font-weight:600;
+    color:var(--blue);
+    margin-top:1rem;
+}
+
+.ticket-icon {
+    position: absolute;
+    color: var(--blue);
+    padding: 2rem;
+    background: #fff;
+    border-radius: 50%;
+    top: 20%;
+    left: -2.5%;
+    box-shadow: rgb(3,18,26,0.1) -1px 0px 0px 0px;
+}
+
+.ticket-wrap {
+    width: 100%;
+    height: 100%;
+    background: var(--light-blue);
+    font-size: 1.6rem;
+    padding: 3rem;
+    flex-direction:column;
+    align-items:center;
+    display:flex;
+    gap:3rem;
+}
+
+.e-ticket {
+    padding: 3rem;
+    border-radius: 0.5rem;
+    background: #fff;
+    box-shadow: rgb(3,18,26,0.2) 0px 1px 2px;
+    width:800px;
+}
+
+.e-ticket .top{
+    display: flex;
+    gap: 3rem;
+}
+
+.e-ticket .content{
+    display:flex;
+    justify-content:space-between;
+    width:100%;
+}
+
+.e-ticket .time{
+    display:flex;
+    justify-content:space-between;
+    text-align:center;
+    margin-top:1rem;
+}
+.e-ticket .branch{
+    width:100px;
+    margin-bottom:1rem;
+}
+
+.e-ticket .qr{
+    width:200px;
+}
+.e-ticket .info .title{
+    font-weight:600;
+    margin-bottom:0.5rem;
+}
+.e-ticket .info p{
+    margin-bottom:1rem;
+}
+
+.e-ticket .middle{
+    display: flex;
+    justify-content:space-between;
+    gap:2rem;
+    padding:2rem 0;
+    margin:2rem 0;
+    border-top:dashed 3px var(--light-blue);
+    border-bottom:dashed 3px var(--light-blue);
+}
+
+.e-ticket .middle .item{
+    display:flex;
+    align-items:center;
+    gap:1rem;
+}
+
+.e-ticket .middle .item i{
+    font-size:2rem;
+    color:var(--blue)
+}
+
+.table{
+    width:100%;
+}
+.table th{
+    text-align:left;
+}
+.table th,td{
+   padding-bottom:1rem;
+}
+
+img {
+    width: 100%;
+}
+
+.history {
+    padding-left: 3rem;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.2);
+    display:none;
+    justify-content:center;
+    align-items:center;
+}
+
+.modal.active{
+    display:flex;
+}
+
+.hide{
+    display:none;
+}
+
+
+.modal-container{
+    background:#fff;
+    font-size:1.6rem;
+    text-align:center;
+    width:500px;
+    padding-bottom:2rem;
+    border-radius:0.5rem;
+}
+.modal-container .title{
+    padding:2rem;
+    background:var(--light-blue);
+}
+
+.modal-container .body{
+    padding:5rem 0;
+}

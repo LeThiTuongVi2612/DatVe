@@ -1,0 +1,379 @@
+﻿@using WebsiteDatVe.Models;
+@model IEnumerable<ChuyenBay>
+@{
+    ViewBag.Title = "Plane";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card-table" style="background-color: #f5f7ff; width:100%">
+    <div class="card" style=" margin:24px 16px;">
+        <div class="card-body">
+            <h4 class="card-title">Quản lý chuyến bay</h4>
+            <p class="card-description">
+                <a href="/Admin/ChuyenBay/Create" class="badge badge-info">Thêm</a>
+            </p>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Tuỳ chọn tìm kiếm
+                    </button>
+                    <div class="dropdown-menu" style="">
+                        <a class="dropdown-item" href="#" onclick="searchByMaChuyenBay()">Mã chuyến bay</a>
+                        <a class="dropdown-item" href="#" onclick="searchByDiemDi()">Điểm đi</a>
+                        <a class="dropdown-item" href="#" onclick="searchByDiemDen()">Điểm đến</a>
+                        <a class="dropdown-item" href="#" onclick="searchByThoiGianDi()">Thời gian đi</a>
+                        <a class="dropdown-item" href="#" onclick="searchByThoiGianDen()">Thời gian đến</a>
+                        <a class="dropdown-item" href="#" onclick="searchByMaMayBay()">Mã máy bay</a>
+                        <a class="dropdown-item" href="#" onclick="searchByGiaVe()">Giá vé</a>
+                    </div>
+                </div>
+                <input id="searchKey" type="text" class="form-control" aria-label="Text input with dropdown button">
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Mã chuyến bay</th>
+                            <th>Điểm đi</th>
+                            <th>Điểm đến</th>
+                            <th>Thời gian đi</th>
+                            <th>Thời gian đến</th>
+                            <th>Mã máy bay</th>
+                            <th>Giá vé</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tbody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Delete Modal HTML -->
+<div id="deleteChuyenBayModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form>
+                <div class="modal-header">
+                    <h4 class="modal-title">Cảnh báo</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Có vẻ như bạn đang muốn xoá chuyến bay này</p>
+                    <p class="text-warning"><small>Hành động ngày không thể khôi phục lại.</small></p>
+                </div>
+                <div class="modal-footer">
+                    <div type="button" id="confirmCancel" class="btn btn-default" data-dismiss="modal">Cancel</div>
+                    <div type="submit" id="confirmOk" class="btn btn-danger">Delete</div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section jsFooter{
+    <script>
+        $(document).ready(function () {
+            loadData();
+        });
+
+        function loadData() {
+            $.ajax({
+                url: "/ChuyenBay/List",
+                type: "GET",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    var html = '';
+                    $.each(result, function (key, item) {
+                        html += '<tr>';
+                        html += '<td>' + item.MaChuyenBay + '</td>';
+                        html += '<td>' + item.DiemDi + '</td>';
+                        html += '<td>' + item.DiemDen + '</td>';
+                        html += '<td>' + item.ThoiGianDi + '</td>';
+                        html += '<td>' + item.ThoiGianDen + '</td>';
+                        html += '<td>' + item.MaMayBay + '</td>';
+                        html += '<td>' + item.Gia + '</td>';
+                        html += '<td><a href="@Request.Url.Scheme://@Request.Url.Host:@Request.Url.Port/Admin/ChuyenBay/getById/'
+                            + item.MaChuyenBay + '" class="badge badge-warning" ">Edit</a> | '
+                            + '<a href="#" class="badge badge-danger" style="border:none"'
+                            + ' onclick="Delete(' + item.MaChuyenBay + ')">Delete</a></td>';
+
+                        html += '</tr>';
+                    });
+                    $('.tbody').html(html);
+                },
+                error: function (errormessage) {
+                    alert(errormessage.responseText);
+                }
+            });
+        }
+
+
+        function Delete(Id) {
+            var fClose = function () {
+                modal.modal("hide");
+                return false;
+            };
+
+            var onConfirm = function () {
+                modal.modal("hide");
+                $.ajax({
+                    url: "/ChuyenBay/Delete/" + Id,
+                    type: "POST",
+                    contentType: "application/json;charset=UTF-8",
+                    dataType: "json",
+                    success: function (result) {
+                        window.location.replace("@Request.Url.Scheme://@Request.Url.Host:@Request.Url.Port/Admin/ChuyenBay/Index");
+                    },
+                    error: function (errormessage) {
+                        alert(errormessage.responseText);
+                    }
+                });
+                return true;
+            };
+
+            var modal = $("#deleteChuyenBayModal");
+            modal.modal("show");
+
+            $("#confirmOk").unbind().one('click', onConfirm);
+            $("#confirmCancel").unbind().one("click", fClose);
+        }
+
+        function searchByMaChuyenBay() {
+            var searchKey = $('#searchKey').val();
+            //Delete dữ liệu hiện tại và tiến hành search lại dữ liệu
+            $('.tbody').html("");
+            $.ajax({
+                url: "/ChuyenBay/SearchByMaChuyenBay?searchKey=" + searchKey,
+                type: "POST",
+                contentType: "html",
+                success: function (result) {
+                    var html = '';
+                    $.each(result, function (key, item) {
+                        html += '<tr>';
+                        html += '<td>' + item.MaChuyenBay + '</td>';
+                        html += '<td>' + item.DiemDi + '</td>';
+                        html += '<td>' + item.DiemDen + '</td>';
+                        html += '<td>' + item.ThoiGianDi + '</td>';
+                        html += '<td>' + item.ThoiGianDen + '</td>';
+                        html += '<td>' + item.MaMayBay + '</td>';
+                        html += '<td>' + item.Gia + '</td>';
+                        html += '<td><a href="@Request.Url.Scheme://@Request.Url.Host:@Request.Url.Port/Admin/ChuyenBay/getById/'
+                            + item.MaChuyenBay + '" class="badge badge-warning" ">Edit</a> | '
+                            + '<a href="#" class="badge badge-danger" style="border:none"'
+                            + ' onclick="Delete(' + item.MaChuyenBay + ')">Delete</a></td>';
+
+                        html += '</tr>';
+                    });
+                    $('.tbody').html(html);
+                },
+                error: function (errormessage) {
+                    alert(errormessage.responseText);
+                }
+            });
+        }
+
+        function searchByDiemDi() {
+            var searchKey = $('#searchKey').val();
+            $('.tbody').html("");
+            $.ajax({
+                url: "/ChuyenBay/SearchByDiemDi",
+                data: { 'searchKey': searchKey },
+                type: "post",
+                success: function (result) {
+                    var html = '';
+                    $.each(result, function (key, item) {
+                        html += '<tr>';
+                        html += '<td>' + item.MaChuyenBay + '</td>';
+                        html += '<td>' + item.DiemDi + '</td>';
+                        html += '<td>' + item.DiemDen + '</td>';
+                        html += '<td>' + item.ThoiGianDi + '</td>';
+                        html += '<td>' + item.ThoiGianDen + '</td>';
+                        html += '<td>' + item.MaMayBay + '</td>';
+                        html += '<td>' + item.Gia + '</td>';
+                        html += '<td><a href="@Request.Url.Scheme://@Request.Url.Host:@Request.Url.Port/Admin/ChuyenBay/getById/'
+                            + item.MaChuyenBay + '" class="badge badge-warning" ">Edit</a> | '
+                            + '<a href="#" class="badge badge-danger" style="border:none"'
+                            + ' onclick="Delete(' + item.MaChuyenBay + ')">Delete</a></td>';
+
+                        html += '</tr>';
+                    });
+                    $('.tbody').html(html);
+                },
+                error: function (message) {
+                    alert(message.contentType);
+                }
+            });
+        }
+
+        function searchByDiemDen() {
+            var searchKey = $('#searchKey').val();
+            $('.tbody').html("");
+            $.ajax({
+                url: "/ChuyenBay/SearchByDiemDen",
+                data: { 'searchKey': searchKey },
+                type: "post",
+                success: function (result) {
+                    var html = '';
+                    $.each(result, function (key, item) {
+                        html += '<tr>';
+                        html += '<td>' + item.MaChuyenBay + '</td>';
+                        html += '<td>' + item.DiemDi + '</td>';
+                        html += '<td>' + item.DiemDen + '</td>';
+                        html += '<td>' + item.ThoiGianDi + '</td>';
+                        html += '<td>' + item.ThoiGianDen + '</td>';
+                        html += '<td>' + item.MaMayBay + '</td>';
+                        html += '<td>' + item.Gia + '</td>';
+                        html += '<td><a href="@Request.Url.Scheme://@Request.Url.Host:@Request.Url.Port/Admin/ChuyenBay/getById/'
+                            + item.MaChuyenBay + '" class="badge badge-warning" ">Edit</a> | '
+                            + '<a href="#" class="badge badge-danger" style="border:none"'
+                            + ' onclick="Delete(' + item.MaChuyenBay + ')">Delete</a></td>';
+
+                        html += '</tr>';
+                    });
+                    $('.tbody').html(html);
+                },
+                error: function (message) {
+                    alert(message.contentType);
+                }
+            });
+        }
+
+        function searchByThoiGianDi() {
+            var searchKey = $('#searchKey').val();
+            $('.tbody').html("");
+            $.ajax({
+                url: "/ChuyenBay/SearchByThoiGianDi",
+                data: { 'searchKey': searchKey },
+                type: "post",
+                success: function (result) {
+                    var html = '';
+                    $.each(result, function (key, item) {
+                        html += '<tr>';
+                        html += '<td>' + item.MaChuyenBay + '</td>';
+                        html += '<td>' + item.DiemDi + '</td>';
+                        html += '<td>' + item.DiemDen + '</td>';
+                        html += '<td>' + item.ThoiGianDi + '</td>';
+                        html += '<td>' + item.ThoiGianDen + '</td>';
+                        html += '<td>' + item.MaMayBay + '</td>';
+                        html += '<td>' + item.Gia + '</td>';
+                        html += '<td><a href="@Request.Url.Scheme://@Request.Url.Host:@Request.Url.Port/Admin/ChuyenBay/getById/'
+                            + item.MaChuyenBay + '" class="badge badge-warning" ">Edit</a> | '
+                            + '<a href="#" class="badge badge-danger" style="border:none"'
+                            + ' onclick="Delete(' + item.MaChuyenBay + ')">Delete</a></td>';
+
+                        html += '</tr>';
+                    });
+                    $('.tbody').html(html);
+                },
+                error: function (message) {
+                    alert(message.contentType);
+                }
+            });
+        }
+
+        function searchByThoiGianDen() {
+            var searchKey = $('#searchKey').val();
+            $('.tbody').html("");
+            $.ajax({
+                url: "/ChuyenBay/SearchByThoiGianDen",
+                data: { 'searchKey': searchKey },
+                type: "post",
+                success: function (result) {
+                    var html = '';
+                    $.each(result, function (key, item) {
+                        html += '<tr>';
+                        html += '<td>' + item.MaChuyenBay + '</td>';
+                        html += '<td>' + item.DiemDi + '</td>';
+                        html += '<td>' + item.DiemDen + '</td>';
+                        html += '<td>' + item.ThoiGianDi + '</td>';
+                        html += '<td>' + item.ThoiGianDen + '</td>';
+                        html += '<td>' + item.MaMayBay + '</td>';
+                        html += '<td>' + item.Gia + '</td>';
+                        html += '<td><a href="@Request.Url.Scheme://@Request.Url.Host:@Request.Url.Port/Admin/ChuyenBay/getById/'
+                            + item.MaChuyenBay + '" class="badge badge-warning" ">Edit</a> | '
+                            + '<a href="#" class="badge badge-danger" style="border:none"'
+                            + ' onclick="Delete(' + item.MaChuyenBay + ')">Delete</a></td>';
+
+                        html += '</tr>';
+                    });
+                    $('.tbody').html(html);
+                },
+                error: function (message) {
+                    alert(message.contentType);
+                }
+            });
+        }
+
+        function searchByMaMayBay() {
+            var searchKey = $('#searchKey').val();
+            //Delete dữ liệu hiện tại và tiến hành search lại dữ liệu
+            $('.tbody').html("");
+            $.ajax({
+                url: "/ChuyenBay/SearchByMaMayBay",
+                data: { 'searchKey': searchKey },
+                type: "POST",
+                success: function (result) {
+                    var html = '';
+                    $.each(result, function (key, item) {
+                        html += '<tr>';
+                        html += '<td>' + item.MaChuyenBay + '</td>';
+                        html += '<td>' + item.DiemDi + '</td>';
+                        html += '<td>' + item.DiemDen + '</td>';
+                        html += '<td>' + item.ThoiGianDi + '</td>';
+                        html += '<td>' + item.ThoiGianDen + '</td>';
+                        html += '<td>' + item.MaMayBay + '</td>';
+                        html += '<td>' + item.Gia + '</td>';
+                        html += '<td><a href="@Request.Url.Scheme://@Request.Url.Host:@Request.Url.Port/Admin/ChuyenBay/getById/'
+                            + item.MaChuyenBay + '" class="badge badge-warning" ">Edit</a> | '
+                            + '<a href="#" class="badge badge-danger" style="border:none"'
+                            + ' onclick="Delete(' + item.MaChuyenBay + ')">Delete</a></td>';
+
+                        html += '</tr>';
+                    });
+                    $('.tbody').html(html);
+                },
+                error: function (errormessage) {
+                    alert(errormessage.responseText);
+                }
+            });
+        }
+
+        function searchByGiaVe() {
+            var searchKey = $('#searchKey').val();
+            //Delete dữ liệu hiện tại và tiến hành search lại dữ liệu
+            $('.tbody').html("");
+            $.ajax({
+                url: "/ChuyenBay/SearchByGiaVe",
+                data: { 'searchKey': searchKey },
+                type: "POST",
+                success: function (result) {
+                    var html = '';
+                    $.each(result, function (key, item) {
+                        html += '<tr>';
+                        html += '<td>' + item.MaChuyenBay + '</td>';
+                        html += '<td>' + item.DiemDi + '</td>';
+                        html += '<td>' + item.DiemDen + '</td>';
+                        html += '<td>' + item.ThoiGianDi + '</td>';
+                        html += '<td>' + item.ThoiGianDen + '</td>';
+                        html += '<td>' + item.MaMayBay + '</td>';
+                        html += '<td>' + item.Gia + '</td>';
+                        html += '<td><a href="@Request.Url.Scheme://@Request.Url.Host:@Request.Url.Port/Admin/ChuyenBay/getById/'
+                            + item.MaChuyenBay + '" class="badge badge-warning" ">Edit</a> | '
+                            + '<a href="#" class="badge badge-danger" style="border:none"'
+                            + ' onclick="Delete(' + item.MaChuyenBay + ')">Delete</a></td>';
+
+                        html += '</tr>';
+                    });
+                    $('.tbody').html(html);
+                },
+                error: function (errormessage) {
+                    alert(errormessage.responseText);
+                }
+            });
+        }
+    </script>
+}

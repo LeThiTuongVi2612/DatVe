@@ -1,0 +1,267 @@
+﻿
+@{
+    ViewBag.Title = "Checkout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    WebsiteDatVe.Models.ThongTinDatVe thongtin = (WebsiteDatVe.Models.ThongTinDatVe)Session["ThongTinDatVe"];
+    <div class="booking-wrap">
+        <div class="booking">
+            <div class="booking-info">
+
+                <div class="booking-header">
+                    <h3>@ViewBag.DiemDi → @ViewBag.DiemDen</h3>
+                    <p><span>@thongtin.NgayDi.ToString("dd/MM/yyyy")</span>  |  <span>@ViewBag.SoLuong hành khách</span>  |  <span>@thongtin.HangGhe</span></p>
+                </div>
+                <div class="title">
+                    <span>Thông tin liên hệ</span>
+                </div>
+                <div class="form-info">
+                    <p class="title">Thông tin liên hệ</p>
+                    <div class="form-container">
+                        <div class="control">
+                            <p>Họ</p>
+                            <input type="text" id="ho" value="" />
+                        </div>
+                        <div class="control">
+                            <p>Tên đệm & Tên</p>
+                            <input type="text" id="ten" value=""/>
+                        </div>
+                        <div class="control">
+                            <p>Số điện thoại di động</p>
+                            <input type="tel" id="sdt" value="" />
+                        </div>
+                        <div class="control">
+                            <p>Email</p>
+                            <input type="email" id="email" value="" />
+                        </div>
+                    </div>
+                </div>
+                <p class="title">Thông tin hành khách</p>
+                @for (int i = 1; i <= thongtin.NguoiLon; i++)
+                {
+                    <div class="form-info adult">
+                        <p class="title">Người lớn @i</p>
+                        <div class="form-container">
+                            <div class="control">
+                                <p>Họ</p>
+                                <input type="text" name="txtHo" />
+                            </div>
+                            <div class="control">
+                                <p>Tên đệm & Tên</p>
+                                <input type="text" name="txtTen" />
+                            </div>
+                            <div class="control">
+                                <p>Số điện thoại di động</p>
+                                <input type="tel" name="txtSDT" />
+                            </div>
+                            <div class="control">
+                                <p>Ngày sinh</p>
+                                <input type="text" name="txtNgaySinh" />
+                            </div>
+                            <div class="control">
+                                <p>CMND/CCCD</p>
+                                <input type="number" name="txtCMND" />
+                            </div>
+                            <div class="control">
+                                <p>Quốc tịch</p>
+                                <input type="text" name="txtQuocTich" />
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (thongtin.TreEm > 0)
+                {
+                    for (int i = 1; i <= thongtin.TreEm; i++)
+                    {
+                        <div class="form-info child">
+                            <p class="title">Trẻ em @i</p>
+                            <div class="form-container">
+                                <div class="control">
+                                    <p>Họ</p>
+                                    <input type="text" name="txtHo" />
+                                </div>
+                                <div class="control">
+                                    <p>Tên đệm & Tên</p>
+                                    <input type="text" name="txtTen" />
+                                </div>
+                                <div class="control">
+                                    <p>Ngày sinh</p>
+                                    <input type="text" name="txtNgaySinh" />
+                                </div>
+                                <div class="control">
+                                    <p>Quốc tịch</p>
+                                    <input type="text" name="txtQuocTich" />
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                @if (thongtin.EmBe > 0)
+                {
+                    for (int i = 1; i <= thongtin.EmBe; i++)
+                    {
+                        <div class="form-info baby">
+                            <p class="title">Em bé @i</p>
+                            <div class="form-container">
+                                <div class="control">
+                                    <p>Họ</p>
+                                    <input type="text" name="txtHo" />
+                                </div>
+                                <div class="control">
+                                    <p>Tên đệm & Tên</p>
+                                    <input type="text" name="txtTen" />
+                                </div>
+                                <div class="control">
+                                    <p>Ngày sinh</p>
+                                    <input type="text" name="txtNgaySinh" />
+                                </div>
+                                <div class="control">
+                                    <p>Quốc tịch</p>
+                                    <input type="text" name="txtQuocTich" />
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+
+
+
+                <p class="title">Phương thức thanh toán</p>
+                <div class="form-method">
+                    <div class="method-payment active">
+                        <img src="~/Assets/images/MoMo_Logo.png" />
+                        <span>Ví điện tử momo</span>
+                    </div>
+                    <div class="method-payment">
+                        <img src="~/Assets/images/bank-card.png" />
+                        <span>Thẻ ngân hàng</span>
+                    </div>
+                </div>
+
+                <div class="form-submit">
+                    <button class="btn-primary" id="btnPayment">THANH TOÁN</button>
+                </div>
+            </div>
+            <div class="form-checkout">
+                <div class="form-checkout-container">
+                    <div class="row">
+                        <span>VietJet Air (Người lớn) x @thongtin.NguoiLon</span>
+                        <span>@ViewBag.GiaVeNguoiLon.ToString("N0") VND</span>
+                    </div>
+                    @{
+                        if (thongtin.TreEm > 0)
+                        {
+                            <div class="row">
+                                <span>VietJet Air (Trẻ em) x @thongtin.TreEm</span>
+                                <span>@ViewBag.GiaVeTreEm.ToString("N0") VND</span>
+                            </div>
+                        }
+                    }
+                    @{
+                        if (thongtin.EmBe > 0)
+                        {
+                            <div class="row">
+                                <span>VietJet Air (Em bé) x @thongtin.EmBe</span>
+                                <span>@ViewBag.GiaVeEmBe.ToString("N0") VND</span>
+                            </div>
+                        }
+                    }
+                    <div class="row">
+                        <span>Tổng tạm tính</span>
+                        <span>@ViewBag.TongTamTinh.ToString("N0") VND</span>
+                    </div>
+                    <div class="row line">
+                        <span>Thuế & phí (10%)</span>
+                        <span>@ViewBag.Thue.ToString("N0") VND</span>
+                    </div>
+                    <div class="row total">
+                        <span>Tổng cộng</span>
+                        <span>@ViewBag.TongCong.ToString("N0") VND</span>
+                    </div>
+                </div>
+            </div>
+            <input id="txtTongTien" value="@ViewBag.TongCong" hidden />
+            <input id="txtMaChuyenBay" value="@ViewBag.MaChuyenBay" hidden />
+        </div>
+    </div>
+}
+
+
+@section scripts{
+    <script>
+
+        var arrCus = [];
+
+        function CreateArray() {
+            $.each($('.adult'), function (k, v) {
+                arrCus.push({
+                    Ho: $(this).find('input[name="txtHo"]').val(),
+                    Ten: $(this).find('input[name="txtTen"]').val(),
+                    SDT: $(this).find('input[name="txtSDT"]').val(),
+                    NgaySinh: $(this).find('input[name="txtNgaySinh"]').val(),
+                    CMND: $(this).find('input[name="txtCMND"]').val(),
+                    QuocTich: $(this).find('input[name="txtQuocTich"]').val(),
+                    LoaiKhachHang: "Người lớn"
+                })
+            })
+
+            $.each($('.child'), function (k, v) {
+                arrCus.push({
+                    Ho: $(this).find('input[name="txtHo"]').val(),
+                    Ten: $(this).find('input[name="txtTen"]').val(),
+                    SDT: null,
+                    NgaySinh: $(this).find('input[name="txtNgaySinh"]').val(),
+                    CMND: null,
+                    QuocTich: $(this).find('input[name="txtQuocTich"]').val(),
+                    LoaiKhachHang: "Trẻ Em"
+                })
+            })
+
+            $.each($('.baby'), function (k, v) {
+                arrCus.push({
+                    Ho: $(this).find('input[name="txtHo"]').val(),
+                    Ten: $(this).find('input[name="txtTen"]').val(),
+                    SDT: null,
+                    NgaySinh: $(this).find('input[name="txtNgaySinh"]').val(),
+                    CMND: null,
+                    QuocTich: $(this).find('input[name="txtQuocTich"]').val(),
+                    LoaiKhachHang: "Em bé"
+                })
+            })
+        }
+
+        $('#btnPayment').click(function () {
+            //list khách hàng
+            CreateArray();
+
+            //Người đặt vé
+            const obj = {
+                Ho: $("#ho").val(),
+                Ten: $("#ten").val(),
+                SDT: $("#sdt").val(),
+                Email: $("#email").val()
+            }
+
+            $.ajax({
+                type: 'post',
+                url: '/Booking/CreateTicket',
+                data: {
+                    arr: JSON.stringify(arrCus),
+                    nguoidat: JSON.stringify(obj),
+                    machuyenbay: $('#txtMaChuyenBay').val(),
+                    tongtien: $('#txtTongTien').val()
+                },
+                success: function (data) {
+                    if (data.code == 200) {
+                        alert('successul')
+                        window.location = "/Booking/ThanhToanMomo"
+                    }
+                }
+            })
+        })
+    </script>
+
+}

@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight</title>
+    <!-- style -->
+    <link rel="stylesheet" href="~/Assets/Client/style.css">
+    <link rel="stylesheet" href="~/Assets/Client/search.css">
+    <link rel="stylesheet" href="~/Assets/Client/login.css">
+    <link rel="stylesheet" href="~/Assets/Client/booking.css">
+    <!-- font-awsome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- google font -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- ajax -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <!-- datetime picker -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!--dropdown-->
+    <link rel="stylesheet" href="~/Assets/Client/select/select.css" />
+    <script src="~/Assets/Client/select/select.js" type="module"></script>
+
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo"><i class="fab fa-telegram-plane"></i>FLIGHT</div>
+        <div class="menu">
+            <a href="/Home/Index" class="item">Trang chủ</a>
+            @*<a href="#" class="item">Khuyến mãi</a>*@
+            <a class="item" id="btnSaved">Đã lưu</a>
+            <a class="item" id="btnHistory">Lịch sử đặt vé</a>
+
+            @if (Session["TaiKhoan"] != null)
+            {
+                //WebsiteDatVe.Models.TaiKhoan taikhoan = (WebsiteDatVe.Models.TaiKhoan)Session["TaiKhoan"];
+                <button class="btn-info"><i class="fas fa-user"></i></button>
+                <input hidden id="session" value="1" />
+            }
+            else
+            {
+                <button class="btn-primary" id="btnLogin">Đăng nhập</button>
+                <input hidden id="session" value="0" />
+            }
+        </div>
+    </header>
+
+    <div class="main">
+        @RenderBody()
+    </div>
+    <footer class="footer">
+        <div class="footer-title">
+            <span>VỀ CHÚNG TÔI</span>
+            <span>DỊCH VỤ</span>
+            <span>CHÍNH SÁCH</span>
+            <span>TRỢ GIÚP</span>
+            <span>LIÊN HỆ</span>
+        </div>
+        <div class="line"></div>
+        <div class="content">
+            <p>
+                Chúng tôi luôn mang đến rất nhiều sự lựa chọn các chuyến bay cho khách hàng.
+                Với chúng tôi hàng không không chỉ đơn giản là một hình thức di chuyển mà còn là sự thú vị, khám phá mới mẻ, trải nghiệm khó quên cho tất cả mọi người trên từng chuyến bay.
+            </p>
+        </div>
+        <div class="media-social">
+            <i class="fab fa-facebook-f"></i>
+            <i class="fab fa-twitter"></i>
+            <i class="fab fa-google-plus-g"></i>
+            <i class="fab fa-linkedin-in"></i>
+            <i class="fab fa-instagram"></i>
+            <i class="fab fa-pinterest"></i>
+        </div>
+        <div class="copy-right">
+            <p>© @DateTime.Now.Year copyright. MyTeam.com</p>
+        </div>
+    </footer>
+
+    @Html.Action("Login", "User")
+
+    @RenderSection("scripts", required: false)
+    <!-- script -->
+    <script src="~/Assets/Client/script.js"></script>
+
+    <!-- Datetimepicker -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+</body>
+
+</html>

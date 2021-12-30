@@ -1,0 +1,140 @@
+﻿@{
+    ViewBag.Title = "Create";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card-body">
+    <h4 class="card-title">Thêm chuyến bay mới</h4>
+    <p class="card-description">
+        Bạn hãy điền thông tin vào form sau
+    </p>
+    <form class="forms-sample">
+        <div class="form-group row">
+            <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Điểm đi</label>
+            <div class="col-sm-9">
+                <select data-select class="form-control" id="DiemDi">
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="exampleInputEmail2" class="col-sm-3 col-form-label">Điểm đến</label>
+            <div class="col-sm-9">
+                <select data-select class="form-control place" id="DiemDen">
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="exampleInputMobile" class="col-sm-3 col-form-label">Thời gian đi</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control place" id="ThoiGianDi" placeholder="yyyy/mm/dd">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="exampleInputPassword2" class="col-sm-3 col-form-label">Thời gian đến</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="ThoiGianDen" placeholder="yyyy/mm/dd">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="exampleInputConfirmPassword2" class="col-sm-3 col-form-label">Mã máy bay</label>
+            <div class="col-sm-9">
+                <select data-select class="form-control place" id="MaMayBay">
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="exampleInputConfirmPassword2" class="col-sm-3 col-form-label">Giá vé</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="GiaVe" placeholder="200000">
+            </div>
+        </div>
+
+        <div type="submit" class="btn btn-primary mr-2" onclick="Add()">Submit</div>
+        <div class="btn btn-light" onclick="BackToChuyenBay()">Cancel</div>
+    </form>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        //Get dia diem cho combobox
+        getDiaDiem();
+        //Get ma may bay cho combobox
+        getMaMayBay();
+
+        flatpickr("#ThoiGianDi", {
+            minDate: "today",
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            /*        dateFormat: "d-m-Y",*/
+            defaultDate: "today",
+            onChange: function (selectedDates, dateStr, instance) {
+                flatpickr("#ThoiGianDen", {
+                    minDate: dateStr,
+                    enableTime: true,
+                    dateFormat: "Y-m-d H:i",
+                    /*                dateFormat: "d-m-Y",*/
+                });
+            },
+
+        });
+
+
+    })
+
+    function getDiaDiem() {
+        $.ajax({
+            type: 'get',
+            url: '/ChuyenBay/getDiaDiem',
+            success: function (data) {
+                $.each(data.lstDiaDiem, function (k, v) {
+                    var option = `<option value="` + v.MaSanBay + `">` + v.NoiDung + `</option>`;
+                    $('#DiemDi').append(option);
+                    $('#DiemDen').append(option);
+                })
+            }
+        })
+    }
+
+    function getMaMayBay() {
+        $.ajax({
+            type: 'get',
+            url: '/ChuyenBay/getMaMayBay',
+            success: function (data) {
+                $.each(data.lstMayBay, function (k, v) {
+                    var option = `<option value="` + v.MaMayBay + `">` + v.NoiDung + `</option>`;
+                    $('#MaMayBay').append(option);
+                })
+            }
+        })
+    }
+
+    function Add() {
+        var chuyenBay = {
+            DiemDi: $('#DiemDi').val(),
+            DiemDen: $('#DiemDen').val(),
+            ThoiGianDi: $('#ThoiGianDi').val(),
+            ThoiGianDen: $('#ThoiGianDen').val(),
+            MaMayBay: $('#MaMayBay').val(),
+            Gia: $('#GiaVe').val(),
+        };
+        $.ajax({
+            url: "/ChuyenBay/Add",
+            data: JSON.stringify(chuyenBay),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                window.location.replace("@Request.Url.Scheme://@Request.Url.Host:@Request.Url.Port/Admin/ChuyenBay/Index");
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function BackToChuyenBay() {
+        window.location.replace("@Request.Url.Scheme://@Request.Url.Host:@Request.Url.Port/Admin/ChuyenBay/Index");
+    }
+</script>
+

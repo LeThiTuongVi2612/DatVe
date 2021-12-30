@@ -1,0 +1,218 @@
+﻿@model WebsiteDatVe.Models.HangBay
+@{
+    ViewBag.Title = "EditAirline";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card-table" style="background-color: #f5f7ff; width:100%; display:flex">
+    <div class="card" style=" margin:auto;width:95%; top:24px ">
+        <div class="card-body">
+            <h4 class="card-title">
+                <a href="/Admin/HangBay/Index">Quản lý hãng bay</a> >
+                <span class="card-description">
+                    Sửa hãng bay
+                </span>
+            </h4>
+            <div class="forms-sample" style="display:flex">
+                <div class="form-group" style="width:50%">
+                    <div class="form-group">
+                        <input hidden id="txtHinh" value="@Model.Logo">
+                    </div>
+                    <div class="input-group col-xs-12">
+                        <div class="w3-content w3-display-container" id="imgPro" style="margin-bottom:1rem">
+                            @if (Model.Logo != null || Model.Logo != "")
+                            {
+                                <img class="mySlides" src="@Url.Content(""+Model.Logo)">
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="forms-sample" style="width:50%">
+                    <div class="form-group">
+                        <label for="exampleInputName1">Mã hãng bay</label>
+                        <input type="text" class="form-control" id="txtMaBai" value="@Model.MaHangBay" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputName1">Tên hãng bay</label>
+                        <input type="text" class="form-control" id="hangBay" value="@Model.TenHangBay">
+                    </div>
+                    <div class="form-group">
+                        <label>File upload</label>
+                        <div class="input-group col-xs-12">
+                            <input type="file" class="form-control file-upload-info" accept="image/*" id="txtimg">
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary mr-2" id="btnDuyet">Sửa</button>
+                    <a href="/Admin/HangBay/Index" type="button" class="btn btn-light" onclick="modalClose()">Thoát</a>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>
+<div class="modal" id="modalDuyet">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Xác nhận</h5>
+                <button type="button" class="close" onclick="modalClose()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="btnMess">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnDongY">Đồng ý</button>
+                <button type="button" class="btn btn-secondary" onclick="modalClose()">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .w3-content, .w3-auto {
+        margin-left: 2px;
+        max-width: 500px;
+        float: left;
+    }
+
+    .w3-text-white, .w3-hover-text-white:hover {
+        color: #fff !important;
+    }
+
+
+
+    #imgPro > .mySlides {
+        height: 50%;
+    }
+
+    #imgPro > .img {
+        width: 100%;
+    }
+
+    .mySlides {
+        display: none;
+        width: 495px;
+    }
+
+        .mySlides > img {
+            width: 100px;
+        }
+
+    .w3-left, .w3-right, .w3-badge {
+        cursor: pointer
+    }
+
+    .w3-badge {
+        height: 13px;
+        width: 13px;
+        padding: 0
+    }
+</style>
+<script>
+    var slideIndex = 1;
+    showDivs(slideIndex);
+
+    function plusDivs(n) {
+        showDivs(slideIndex += n);
+    }
+
+    function currentDiv(n) {
+        showDivs(slideIndex = n);
+    }
+
+    function showDivs(n) {
+        var i;
+        var x = document.getElementsByClassName("mySlides");
+        var dots = document.getElementsByClassName("demo");
+        if (n > x.length) { slideIndex = 1 }
+        if (n < 1) { slideIndex = x.length }
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+        }
+        for (i = 0; i < dots.length; i++) {
+            dots[i].className = dots[i].className.replace(" w3-white", "");
+        }
+        x[slideIndex - 1].style.display = "block";
+        dots[slideIndex - 1].className += " w3-white";
+    }
+
+
+</script>
+@section jsFooter{
+    <script>
+        var img = "" + $('#txtHinh').val();
+        var ma = $("#txtMaBai").val();
+        $(document).ready(function () {
+            $('#txtimg').change(function () {
+                if ($('#txtimg').val().length > 0) {
+                    if (window.FormData !== undefined) {
+                        var fileupload = $('#txtimg').get(0);
+                        var file = fileupload.files;
+                        var formdata = new FormData();
+                        formdata.append('file', file[0]);
+                        $.ajax({
+                            type: 'POST',
+                            url: '/HangBay/XuLyFile',
+                            contentType: false, //Khong co hear
+                            processData: false,//Khong Xu Ly Du Lieu
+                            data: formdata,
+                            success: function (ImageData) {
+                                $('#imgPro').empty();
+                                $('#imgPro').append(`<img class="mySlides" style="display:block;" src="` + ImageData + `"/>`);
+                                img = ImageData;
+                                //location.reload();
+                            }
+                        });
+                    }
+                } else {
+                    alert("Vui lòng chọn file");
+                }
+            });
+        });
+
+        $('#btnDuyet').on('click', function () {
+            $('#btnMess').empty();
+            $('#btnMess').append('<p>Bạn chắc chắn sửa hãng bay?</p>');
+            $('#modalDuyet').show();
+
+        });
+        function modalClose() {
+            $('#modalDuyet').hide();
+
+        }
+        $('#btnDongY').click(function () {
+            //alert('Thành công')
+            //alert(ma);
+            $.ajax({
+                type: 'post',
+                url: '/Admin/HangBay/EditAirline ',
+                data: {
+                    mahangbay: ma,
+                    TenHangBay: $("#hangBay").val(),
+                    Hinh: img,
+                },
+                success: function (data) {
+                    if (data.code == 200) {
+                        alert("Thao tác thành công");
+                        window.location = "/Admin/HangBay/Index";
+                    }
+                }
+
+            });
+
+        });
+
+    </script>
+}
+
+
+
+

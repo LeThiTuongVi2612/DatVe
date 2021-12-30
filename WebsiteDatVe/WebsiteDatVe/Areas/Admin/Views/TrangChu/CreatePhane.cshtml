@@ -1,0 +1,147 @@
+﻿@model WebsiteDatVe.Models.MayBay
+@{
+    ViewBag.Title = "CreatePhane";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card-table" style="background-color: #f5f7ff; width:100%">
+    <div class="card" style="margin: 24px 16px;">
+        <div class="card-body">
+            <h4 class="card-title">
+                <a href="/Admin/TrangChu/Plane">Quản lý máy bay</a> >
+                <span class="card-description">
+                    Tạo mới
+                </span>
+            </h4>
+            <div class="forms-sample" >
+                <div style="display:flex; justify-content:space-between">
+                    <div style="width:100%">
+                        <div class="form-group width-50">
+                            <label for="exampleInputName1">Mã máy bay</label>
+                            <input type="text" class="form-control" id="txtMaMayBay" placeholder="Mã máy bay">
+                        </div>
+                        <div class="form-group width-50">
+                            <label for="exampleSelectGender">Hãng máy bay</label>
+                            @Html.DropDownList("MaHangBay", null, new { @class = "form-control", @id = "MaHangBay", @style = "background-image: none" })
+                        </div>
+                        <div class="form-group width-50">
+                            <label for="exampleInputEmail3">Ghế phổ thông</label>
+                            <input type="number" class="form-control" id="txtPhoThong" placeholder="Số ghế phổ thông">
+                        </div>
+                    </div>
+                    <div style="width:100%">
+                        <div class="form-group width-50">
+                            <label for="exampleInputEmail3">Ghế thương gia</label>
+                            <input type="number" class="form-control" id="txtThuongGia" placeholder="Số ghế thương gia">
+                        </div>
+                        <div class="form-group width-50">
+                            <label for="exampleInputEmail3">Ghế hạng nhất</label>
+                            <input type="number" class="form-control" id="txtHangNhat" placeholder="Số ghế hạng nhất">
+                        </div>
+                        <div class="form-group width-50">
+                            <label for="exampleInputEmail3">Ghế đặt biệt</label>
+                            <input type="number" class="form-control" id="txtDatBiet" placeholder="Số ghế đặt biệt">
+                        </div>
+
+                    </div>
+                </div>
+
+                <button class="btn btn-primary mr-2" id="btnDuyet">Tạo mới</button>
+                <a href="/Admin/TrangChu/Plane" class="btn btn-light">Thoát</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="modalDuyet">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Xác nhận</h5>
+                <button type="button" class="close" onclick="modalClose()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="btnMess">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnDongY">Đồng ý</button>
+                <button type="button" class="btn btn-secondary" onclick="modalClose()">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .width-50 {
+        width: 95%
+    }
+</style>
+
+@section Jsfooter{
+    <script>
+        var trangthai = 2;
+        var ma = $("#txtMaBai").val();
+        var img = "";
+
+        $('#btnDuyet').on('click', function () {
+            if ($("#txtMaMayBay").val() != "") {
+                if ($("#txtPhoThong").val() > 0) {
+                    if ($("#txtThuongGia").val() > 0) {
+                        if ($("#txtHangNhat").val() > 0) {
+                            if ($("#txtDatBiet").val() > 0) {
+                                if ($("#MaHangBay").val() != "") {
+                                    $('#btnMess').empty();
+                                    $('#btnMess').append('<p>Bạn chắc chắn thêm mới máy bay?</p>');
+                                    $('#modalDuyet').show();
+                                } else {
+                                    alert("Vui lòng chọn hãng bay");
+                                }
+                            } else {
+                                alert("Vui lòng nhập số ghế đặt biệt > 0");
+                            }
+                        } else {
+                            alert("Vui lòng nhập số ghế hạng nhất > 0");
+                        }
+                    } else {
+                        alert("Vui lòng nhập số ghế thương gia > 0");
+                    }
+                } else {
+                    alert("Vui lòng nhập số ghế phổ thông > 0");
+                }
+            } else {
+                alert("Vui lòng nhập mã máy bay");
+            }
+        });
+
+        function modalClose() {
+            $('#modalDuyet').hide();
+
+        }
+
+        $('#btnDongY').click(function () {
+            //alert(ma);
+            $.ajax({
+                type: 'post',
+                url: '/Admin/TrangChu/AddPhane',
+                data: {
+                    MaMayBay: $("#txtMaMayBay").val(),
+                    GhePhoThong: $("#txtPhoThong").val(),
+                    GheThuongGia: $("#txtThuongGia").val(),
+                    GheHangNhat: $("#txtHangNhat").val(),
+                    GheDatBiet: $("#txtDatBiet").val(),
+                    MaHangBay: $("#MaHangBay").val(),
+
+                },
+                success: function (data) {
+                    if (data.code == 200) {
+                        alert("Thao tác thành công");
+                        window.location = "/Admin/TrangChu/Plane";
+                    }
+                }
+
+            });
+        });
+    </script>
+}

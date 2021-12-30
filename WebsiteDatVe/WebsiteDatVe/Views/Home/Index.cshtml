@@ -1,0 +1,265 @@
+﻿@{
+
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="banner">
+    <img src="~/Assets/images/banner-flight.jpg">
+    <div class="heading">
+        <h1>Đặt vé máy bay nội địa, quốc tế siêu tiết kiệm với hành trình như ý!</h1>
+    </div>
+    <div class="search">
+        <div class="box">
+            <div class="radio-group">
+                <label class="radio">
+                    <input type="radio" name="type" id="rdMotChieu" value="1" checked />
+                    <label for="rdMotChieu">Một chiều</label>
+                </label>
+                <label class="radio">
+                    <input type="radio" name="type" id="rdHaiChieu" value="2" />
+                    <label for="rdHaiChieu">Khứ hồi</label>
+                </label>
+            </div>
+            <div class="detail">
+                <div class="container">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div class="form-group">
+                        <div class="place">
+                            <p class="title">Điểm đi</p>
+                            <select data-select id="cbbDiemDi">
+                            </select>
+
+                        </div>
+                        <div class="place">
+                            <p class="title">Điểm đến</p>
+                            <select data-select id="cbbDiemDen">
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="container">
+                    <i class="fas fa-calendar-alt"></i>
+                    <div class="form-group">
+                        <div class="date">
+                            <p class="title">Ngày đi</p>
+                            <input id="timeCheckIn" type="text" />
+                        </div>
+                        <div class="date">
+                            <p class="title">Ngày về</p>
+                            <input id="timeCheckOut" type="text" value="--" disabled />
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <i class="fas fa-child"></i>
+                    <div class="form-group" id="frmKhach">
+                        <div class="passengers">
+                            <p class="title">Hành khách</p>
+                            <div class="content">
+                                <span class="nguoilon"></span>
+                                Người lớn,
+                                <span class="treem"></span>
+                                Trẻ em,
+                                <span class="embe"></span>
+                                Em bé
+                            </div>
+
+                        </div>
+                        <div class="passengers">
+                            <div class="arrow">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="combobox" id="cbbKhach">
+                        <div class="item">
+                            <div class="icon"><i class="fas fa-walking"></i></div>
+                            <div class="content">
+                                <div class="left">
+                                    <p>Người lớn</p>
+                                    <p>>12 tuổi</p>
+                                </div>
+                                <div class="right">
+                                    <i class="fas fa-minus" onclick="Minus('nguoilon')"></i>
+                                    <div class="nguoilon"></div>
+                                    <i class="fas fa-plus" onclick="Plus('nguoilon')"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="icon"><i class="fas fa-child"></i></div>
+                            <div class="content">
+                                <div class="left">
+                                    <p>Trẻ em</p>
+                                    <p>>2 tuổi & <12 tuổi</p>
+                                </div>
+                                <div class="right">
+                                    <i class="fas fa-minus" onclick="Minus('treem')"></i>
+                                    <div class="treem"></div>
+                                    <i class="fas fa-plus" onclick="Plus('treem')"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="icon"> <i class="fas fa-baby"></i></div>
+                            <div class="content">
+                                <div class="left">
+                                    <p>Em bé</p>
+                                    <p><2 tuổi</p>
+                                </div>
+                                <div class="right">
+                                    <i class="fas fa-minus" onclick="Minus('embe')"></i>
+                                    <div class="embe"></div>
+                                    <i class="fas fa-plus" onclick="Plus('embe')"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <i class="fas fa-couch"></i>
+                    <div class="form-group" id="frmLoaiGhe">
+                        <div class="passengers">
+                            <p class="title">Hạng ghế</p>
+                            <p id="LoaiGhe">Phổ thông</p>
+                        </div>
+                        <div class="passengers">
+                            <div class="arrow">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="combobox" id="cbbLoaiGhe">
+                        <div class="item sheet">
+                            Phổ thông
+                        </div>
+                        <div class="item sheet">
+                            Phổ thông đặc biệt
+                        </div>
+                        <div class="item sheet">
+                            Thương gia
+                        </div><div class="item sheet">
+                            Hạng nhất
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-container">
+                    <button class="btn-primary" id="btnFind">TÌM CHUYẾN BAY</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="popular">
+    <h2>ĐIỂM ĐẾN PHỔ BIẾN</h2>
+    <div class="box-container">
+        <div class="box-item">
+            <img src="https://38bb92d9c347dc7.cmccloud.com.vn/web/images/demo/sapa.jpg" />
+            <div class="info"><h3>Sapa</h3></div>
+        </div>
+        <div class="box-item">
+            <img src="https://38bb92d9c347dc7.cmccloud.com.vn/web/images/demo/ninhbinh.jpg" />
+            <div class="info"><h3>Ninh Bình</h3></div>
+        </div>
+
+        <div class="box-item">
+            <img src="https://38bb92d9c347dc7.cmccloud.com.vn/web/images/demo/quynhon.jpg" />
+            <div class="info"><h3>Quy Nhơn</h3></div>
+        </div><div class="box-item">
+            <img src="https://38bb92d9c347dc7.cmccloud.com.vn/web/images/demo/phuquoc.jpg" />
+            <div class="info"><h3>Phú Quốc</h3></div>
+        </div>
+        <div class="box-item">
+            <img src="https://38bb92d9c347dc7.cmccloud.com.vn/web/images/demo/dalat.jpg" />
+            <div class="info"><h3>Đà Lạt</h3></div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            getDiaDiem();
+
+        })
+        //Xử lý số lượng hành khách
+        var nguoilon = 1;
+        var treem = 0;
+        var embe = 0;
+
+        $('.nguoilon').html(nguoilon);
+        $('.treem').html(treem);
+        $('.embe').html(embe);
+
+        function Plus(a) {
+            if (a == 'nguoilon') {
+                nguoilon = nguoilon + 1
+                $('.nguoilon').html(nguoilon)
+            }
+            if (a == 'treem') {
+                treem = treem + 1
+                $('.treem').html(treem)
+            }
+            if (a == 'embe') {
+                embe = embe + 1
+                $('.embe').html(embe)
+            }
+        }
+
+        function Minus(a) {
+            if (a == 'nguoilon') {
+                nguoilon > 1 ? nguoilon = nguoilon - 1 : nguoilon = 1
+                $('.nguoilon').html(nguoilon)
+            }
+            if (a == 'treem') {
+                treem > 0 ? treem = treem - 1 : treem = 0
+                $('.treem').html(treem)
+            }
+            if (a == 'embe') {
+                embe > 0 ? embe = embe - 1 : embe = 0
+                $('.embe').html(embe)
+            }
+        }
+
+        //Xu li chon ghe
+        $('.sheet').click(function () {
+            $("#cbbLoaiGhe").removeClass("active");
+            $('#LoaiGhe').html($(this).html())
+        })
+
+
+        //Xử lý  radio button
+        $('input:radio[name="type"]').change(function () {
+            if ($(this).val() == 2) {
+                $('#timeCheckOut').prop("disabled", false);
+            } else {
+                $('#timeCheckOut').prop("disabled", true);
+                $('#timeCheckOut').val("--")
+            }
+        })
+
+        function getDiaDiem() {
+            $.ajax({
+                type: 'get',
+                url: '/Home/getDiaDiem',
+                success: function (data) {
+                    $.each(data.lstDiaDiem, function (k, v) {
+                        var option = `<option value="` + v.MaSanBay + `">` + v.NoiDung + `</option>`;
+                        $('#cbbDiemDi').append(option);
+                        $('#cbbDiemDen').append(option);
+                    })
+
+
+                }
+            })
+        }
+
+        //Tìm chuyến bay
+        $('#btnFind').click(function () {
+            window.location = '/Home/Search/?diemdi=' + $('#cbbDiemDi').val() + '&diemden=' + $('#cbbDiemDen').val() + '&nguoilon=' + nguoilon + '&treem=' + treem + '&embe=' + embe + '&ngaydi=' + $('#timeCheckIn').val() + '&hangghe=' + $('#LoaiGhe').html();
+        })
+
+    </script>
+}

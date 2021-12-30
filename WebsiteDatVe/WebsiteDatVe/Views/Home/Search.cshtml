@@ -1,0 +1,79 @@
+﻿@model List<WebsiteDatVe.Models.ChuyenBay>
+
+@{
+    ViewBag.Title = "Search";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="search-result">
+    @{
+        WebsiteDatVe.Models.ThongTinDatVe thongtin = (WebsiteDatVe.Models.ThongTinDatVe)Session["ThongTinDatVe"];
+        <div class="search-info">
+            <div class="content">
+                <h3>@ViewBag.DiemDi → @ViewBag.DiemDen</h3>
+                <p><span>@thongtin.NgayDi.ToString("dd/M/yyyy")</span>  |  <span>@ViewBag.SoLuong hành khách</span>  |  <span>@thongtin.HangGhe</span></p>
+            </div>
+            <div class="button">
+                <button><i class="fas fa-search"></i>Đổi tìm kiếm</button>
+            </div>
+        </div>
+    }
+
+
+    <div class="search-filter">
+        <h4>Bộ lọc</h4>
+        <div class="item">Thời gian bay <i class="fas fa-sort-down"></i></div>
+        <div class="item">Hãng hàng không <i class="fas fa-sort-down"></i></div>
+
+    </div>
+
+    <div class="ticket-container">
+        @foreach (var item in Model)
+        {
+            <div class="ticket">
+                <div class="ticket-content">
+                    <div class="left">
+                        <img src="@item.MayBay.HangBay.Logo" />
+                    </div>
+                    <div class="center">
+                        <div class="center-item">
+                            <h3>@item.ThoiGianDi.GetValueOrDefault().ToString("HH:mm")</h3>
+                            <span>@ViewBag.DiemDi</span>
+                        </div>
+                        <div class="center-item">
+                            <p>--- <i class="fas fa-plane"></i> ---</p>
+                            <span>@item.ThoiGianDen.GetValueOrDefault().Subtract(item.ThoiGianDi.GetValueOrDefault()).TotalHours giờ</span>
+                        </div>
+                        <div class="center-item">
+                            <h3>@item.ThoiGianDen.GetValueOrDefault().ToString("HH:mm")</h3>
+                            <span>@ViewBag.DiemDen</span>
+                        </div>
+                    </div>
+                    <div class="right">
+                        <div class="icon"><i class="far fa-bookmark"></i></div>
+                        <h3>@item.Gia.GetValueOrDefault(0).ToString("N0")  VNĐ/khách</h3>
+                        <button id="@item.MaChuyenBay" name="btnChonVe">Chọn vé</button>
+                    </div>
+                </div>
+                <div class="ticket-option">
+                    <p>Chi tiết chuyến bay</p>
+                    <p>Chi tiết vé</p>
+                </div>
+            </div>
+        }
+    </div>
+
+</div>
+
+@section scripts{
+    <script>
+        $("button[name='btnChonVe']").click(function () {
+            if ($('#session').val() == 0) {
+                $('.sign-in').addClass('show')
+            } else {
+                window.location = "/Booking/Checkout/" + this.id
+            }
+        })
+    </script>
+}
+

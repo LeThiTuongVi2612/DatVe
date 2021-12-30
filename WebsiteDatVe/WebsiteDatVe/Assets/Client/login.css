@@ -1,0 +1,105 @@
+﻿.sign-in{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100vh;
+    z-index:1000;
+    background:rgba(0,0,0,0.2);
+    display:none;
+    justify-content:center;
+    align-items:center;
+}
+
+.sign-in.show{
+    display:flex;
+}
+
+.sign-in .container {
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    font-size: 2rem;
+    align-items: center;
+    padding: 5rem 3rem;
+    padding-bottom:7rem;
+    width: 500px;
+}
+
+
+.sign-in .container input{
+    font-size:1.6rem;
+    width:100%;
+    background: var(--light-blue);
+    padding:1.5rem;
+    border-radius:0.5rem;
+    margin:1.5rem 0;
+}
+
+.sign-in .container input:focus{
+    border:solid 1px var(--blue);
+}
+
+#txtMsg {
+    color: red;
+    width: 100%;
+    text-align: left;
+    font-size: 1.6rem;
+}
+
+.sign-in .container .btn-signin{
+    width:100%;
+    padding:1.75rem;
+    background:var(--blue);
+    font-size:1.6rem;
+    text-transform:uppercase;
+    color:#fff;
+    font-weight:600;
+    cursor:pointer;
+    margin:1.5rem 0;
+}
+
+.sign-in .container #btnclose{
+    width:100%
+}
+
+.sign-in .container p{
+    text-align:center;
+}
+
+.sign-in .container .fa-times{
+    float:right;
+    font-size:2.5rem;
+    cursor:pointer;
+}
+
+.btn-social{
+    display:flex;
+    width:100%;
+    gap:2rem;
+    margin:1.5rem 0;
+    margin-bottom:3rem;
+}
+
+.btn-social button{
+    width:100%;
+    font-size:1.6rem;
+    padding:1.75rem;
+    text-transform:uppercase;
+    font-weight:600;
+    background: var(--light-blue);
+    cursor: pointer;
+}
+
+.btn-social button i{
+    font-size:2rem;
+    margin-right:1rem;
+}
+
+.btn-fb i {
+    color: #3b5998
+}
+
+.btn-gg i {
+    color: red;
+}

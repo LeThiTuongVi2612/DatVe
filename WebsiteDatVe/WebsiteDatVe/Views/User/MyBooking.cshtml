@@ -1,0 +1,49 @@
+﻿@model List<WebsiteDatVe.Models.Ve>
+
+@{
+    ViewBag.Title = "MyBooking";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="booking-wrap">
+    @foreach (var item in Model)
+    {
+        <div class="ticket-container">
+            <div class="ticket history">
+                <div class="ticket-icon">
+                    <i class="fas fa-plane-departure"></i>
+                </div>
+                <div class="ticket-content">
+                    <div class="left">
+                        <img src="@item.ChuyenBay.MayBay.HangBay.Logo" />
+                    </div>
+                    <div class="ticket-info">
+                        <p>Ngày đi</p>
+                        <p class="p-info">@item.ChuyenBay.ThoiGianDi.GetValueOrDefault().ToString("dd/MM/yyyy")</p>
+                    </div>
+                    <div class="ticket-info">
+                        <p>Giờ khởi hành</p>
+                        <p class="p-info">@item.ChuyenBay.ThoiGianDi.GetValueOrDefault().ToString("hh:MM")</p>
+                    </div>
+                    <div class="ticket-info">
+                        <p>Ngày đặt</p>
+                        <p class="p-info">@item.NgayDat.GetValueOrDefault().ToString("dd/MM/yyyy")</p>
+                    </div>
+                    <div class="ticket-info">
+                        <button class="btn-primary" name="btnXem" id="@item.MaVe" >Xem vé</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+
+@section scripts{
+    <script>
+        $('button[name="btnXem"]').click(function () {
+            window.location = "/Booking/Ticket/?id=" + this.id
+        })
+    </script>
+}
+

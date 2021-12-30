@@ -1,0 +1,471 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+          integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+</head>
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-md-12 grid-margin">
+                <div class="row">
+                    <div class="col-12 col-xl-8 mb-4 mb-xl-0">
+                        <h3 class="font-weight-bold">Welcome Aamir</h3>
+                        <h6 class="font-weight-normal mb-0">All systems are running smoothly! You have <span class="text-primary">3 unread alerts!</span></h6>
+                    </div>
+                    <div class="col-12 col-xl-4">
+                        <div class="justify-content-end d-flex">
+                            <div class="dropdown flex-md-grow-1 flex-xl-grow-0">
+                                <button class="btn btn-sm btn-light bg-white dropdown-toggle" type="button" id="dropdownMenuDate2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    <i class="mdi mdi-calendar"></i> Today (10 Jan 2021)
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuDate2">
+                                    <a class="dropdown-item" href="#">January - March</a>
+                                    <a class="dropdown-item" href="#">March - June</a>
+                                    <a class="dropdown-item" href="#">June - August</a>
+                                    <a class="dropdown-item" href="#">August - November</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 grid-margin stretch-card">
+                <div class="card tale-bg">
+                    <div class="card-people mt-auto">
+                        <img src="~/Assets/Admin/images/dashboard/people.svg" alt="people">
+                        <div class="weather-info">
+                            <div class="d-flex">
+                                <div>
+                                    <h2 class="mb-0 font-weight-normal"><i class="icon-sun mr-2"></i>31<sup>C</sup></h2>
+                                </div>
+                                <div class="ml-2">
+                                    <h4 class="location font-weight-normal">Bangalore</h4>
+                                    <h6 class="font-weight-normal">India</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 grid-margin transparent">
+                <div class="row">
+                    <div class="col-md-6 mb-4 stretch-card transparent">
+                        <div class="card card-tale">
+                            <div class="card-body">
+                                <p class="mb-4"><i style="margin-right:10px" class="fas fa-plane-slash"></i>Số lượng hãng bay</p>
+                                <p class="fs-30 mb-2">@ViewBag.tonghangbay</p>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4 stretch-card transparent">
+                        <div class="card card-dark-blue">
+                            <div class="card-body">
+                                <p class="mb-4"><i style="margin-right:10px" class="fas fa-fighter-jet"></i>Số lượng chuyến bay</p>
+                                <p class="fs-30 mb-2">@ViewBag.tongchuyenbay</p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent">
+                        <div class="card card-light-blue">
+                            <div class="card-body">
+                                <p class="mb-4"><i style="margin-right:10px" class="fas fa-plane-departure"></i>Số lượng sân bay</p>
+                                <p class="fs-30 mb-2"> @ViewBag.tongsanbay</p>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 stretch-card transparent">
+                        <div class="card card-light-danger">
+                            <div class="card-body">
+                                <p class="mb-4"><i style="margin-right:10px" class="fas fa-ticket-alt"></i>Số lượng vé đã bán</p>
+                                <p class="fs-30 mb-2"> @ViewBag.tongve</p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                            <p class="card-title">Line chart</p>
+
+                        </div>
+                        <p class="font-weight-500">Đây là thống kê tổng số lượng vé bán ra ở mỗi tháng</p>
+                        <div id="sales-legend" class="chartjs-legend mt-4 mb-2"><ul class="1-legend"><li><span></span>Tổng vé bán ra</li><li><span></span>S </li></ul></div>
+                        <canvas id="myChart" width="868" height="433" style="display: block; height: 289px; width: 579px;"></canvas>
+                    </div>
+                </div>
+            </div>
+            @* <div class="col-md-6 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                        <p class="card-title">Thông tin bay</p>
+                        <p class="font-weight-500">Đây là thông tin thống kế liên quan đến các chuyến bay.</p>
+                        <div class="d-flex flex-wrap mb-5">
+
+                            <div class="mr-5 mt-3">
+                                <p class="text-muted"><i class="fas fa-user-alt" style="margin-right:10px;color:#4B49AC"></i>Số lượng khách hàng</p>
+                                <h3 class="text-primary fs-30 font-weight-medium">@ViewBag.tongkhachhang</h3>
+                            </div>
+                            <div class="mr-5 mt-3">
+                                <p class="text-muted"><i style="margin-right:10px;color:#4B49AC" class="fas fa-dollar-sign"></i>Doanh thu</p>
+                                <h3 class="text-primary fs-30 font-weight-medium">djhbdsaydu</h3>
+                            </div>
+                        </div>*@
+
+            @*<div class="col-lg-6 grid-margin stretch-card" style="color:#4B49AC">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                        <h4 class="card-title">Line chart</h4>
+                                        <canvas id="lineChart" width="868" height="433" style="display: block; height: 289px; width: 579px;" class="chartjs-render-monitor"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>*@
+            <div class="col-md-6 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                        <div class="d-flex justify-content-between">
+                            <p class="card-title">Sales Report</p>
+
+                        </div>
+                        <p class="font-weight-500">Đây là thống kê giữa tổng số lượng vé bán ra so với số lượng vé của mỗi hạng vé</p>
+                        <div id="sales-legend" class="chartjs-legend mt-4 mb-2"><ul class="1-legend"><li><span style="background-color: rgb(152, 189, 255);"></span>Tổng vé bán ra</li><li><span style="background-color: rgb(75, 73, 172);"></span>Số lượng vé mỗi hạng </li></ul></div>
+                        <canvas id="myChart1" width="497" height="248" style="display: block; height: 199px; width: 398px;"></canvas>
+                        @*<canvas id="sales-chart" width="497" height="248" style="display: block; height: 199px; width: 398px;" class="chartjs-render-monitor"></canvas>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 grid-margin stretch-card">
+                <div class="card position-relative">
+                    <div class="card-body">
+                        <div id="detailedReports" class="carousel slide detailed-report-carousel position-static pt-2" data-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item">
+                                    <div class="row">
+                                        <div class="col-md-12 col-xl-3 d-flex flex-column justify-content-start">
+                                            <div class="ml-xl-4 mt-3">
+                                                <p class="card-title">Detailed Reports</p>
+                                                <h1 class="text-primary">$34040</h1>
+                                                <h3 class="font-weight-500 mb-xl-4 text-primary">North America</h3>
+                                                <p class="mb-2 mb-xl-0">The total number of sessions within the date range. It is the period time a user is actively engaged with your website, page or app, etc</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 col-xl-9">
+                                            <div class="row">
+                                                <div class="col-md-6 border-right">
+                                                    <div class="table-responsive mb-3 mb-md-0 mt-3">
+                                                        <table class="table table-borderless report-table">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td class="text-muted">Illinois</td>
+                                                                    <td class="w-100 px-0">
+                                                                        <div class="progress progress-md mx-4">
+                                                                            <div class="progress-bar bg-primary" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td><h5 class="font-weight-bold mb-0">713</h5></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-muted">Washington</td>
+                                                                    <td class="w-100 px-0">
+                                                                        <div class="progress progress-md mx-4">
+                                                                            <div class="progress-bar bg-warning" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td><h5 class="font-weight-bold mb-0">583</h5></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-muted">Mississippi</td>
+                                                                    <td class="w-100 px-0">
+                                                                        <div class="progress progress-md mx-4">
+                                                                            <div class="progress-bar bg-danger" role="progressbar" style="width: 95%" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td><h5 class="font-weight-bold mb-0">924</h5></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-muted">California</td>
+                                                                    <td class="w-100 px-0">
+                                                                        <div class="progress progress-md mx-4">
+                                                                            <div class="progress-bar bg-info" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td><h5 class="font-weight-bold mb-0">664</h5></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-muted">Maryland</td>
+                                                                    <td class="w-100 px-0">
+                                                                        <div class="progress progress-md mx-4">
+                                                                            <div class="progress-bar bg-primary" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td><h5 class="font-weight-bold mb-0">560</h5></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-muted">Alaska</td>
+                                                                    <td class="w-100 px-0">
+                                                                        <div class="progress progress-md mx-4">
+                                                                            <div class="progress-bar bg-danger" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td><h5 class="font-weight-bold mb-0">793</h5></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mt-3">
+                                                    <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                                    <canvas id="north-america-chart" width="382" height="191" style="display: block; height: 153px; width: 306px;" class="chartjs-render-monitor"></canvas>
+                                                    <div id="north-america-legend"><div class="report-chart"><div class="d-flex justify-content-between mx-4 mx-xl-5 mt-3"><div class="d-flex align-items-center"><div class="mr-3" style="width:20px; height:20px; border-radius: 50%; background-color: #4B49AC"></div><p class="mb-0">Offline sales</p></div><p class="mb-0">88333</p></div><div class="d-flex justify-content-between mx-4 mx-xl-5 mt-3"><div class="d-flex align-items-center"><div class="mr-3" style="width:20px; height:20px; border-radius: 50%; background-color: #FFC100"></div><p class="mb-0">Online sales</p></div><p class="mb-0">66093</p></div><div class="d-flex justify-content-between mx-4 mx-xl-5 mt-3"><div class="d-flex align-items-center"><div class="mr-3" style="width:20px; height:20px; border-radius: 50%; background-color: #248AFD"></div><p class="mb-0">Returns</p></div><p class="mb-0">39836</p></div></div></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="carousel-item active">
+                                    <div class="row">
+                                        <div class="col-md-12 col-xl-3 d-flex flex-column justify-content-start">
+                                            <div class="ml-xl-4 mt-3">
+                                                <p class="card-title">Detailed Reports</p>
+                                                <h1 class="text-primary">$34040</h1>
+                                                <h3 class="font-weight-500 mb-xl-4 text-primary">North America</h3>
+                                                <p class="mb-2 mb-xl-0">The total number of sessions within the date range. It is the period time a user is actively engaged with your website, page or app, etc</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 col-xl-9">
+                                            <div class="row">
+                                                <div class="col-md-6 border-right">
+                                                    <div class="table-responsive mb-3 mb-md-0 mt-3">
+                                                        <table class="table table-borderless report-table">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td class="text-muted">Illinois</td>
+                                                                    <td class="w-100 px-0">
+                                                                        <div class="progress progress-md mx-4">
+                                                                            <div class="progress-bar bg-primary" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td><h5 class="font-weight-bold mb-0">713</h5></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-muted">Washington</td>
+                                                                    <td class="w-100 px-0">
+                                                                        <div class="progress progress-md mx-4">
+                                                                            <div class="progress-bar bg-warning" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td><h5 class="font-weight-bold mb-0">583</h5></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-muted">Mississippi</td>
+                                                                    <td class="w-100 px-0">
+                                                                        <div class="progress progress-md mx-4">
+                                                                            <div class="progress-bar bg-danger" role="progressbar" style="width: 95%" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td><h5 class="font-weight-bold mb-0">924</h5></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-muted">California</td>
+                                                                    <td class="w-100 px-0">
+                                                                        <div class="progress progress-md mx-4">
+                                                                            <div class="progress-bar bg-info" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td><h5 class="font-weight-bold mb-0">664</h5></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-muted">Maryland</td>
+                                                                    <td class="w-100 px-0">
+                                                                        <div class="progress progress-md mx-4">
+                                                                            <div class="progress-bar bg-primary" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td><h5 class="font-weight-bold mb-0">560</h5></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-muted">Alaska</td>
+                                                                    <td class="w-100 px-0">
+                                                                        <div class="progress progress-md mx-4">
+                                                                            <div class="progress-bar bg-danger" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td><h5 class="font-weight-bold mb-0">793</h5></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mt-3">
+                                                    <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                                    <canvas id="south-america-chart" height="191" width="382" class="chartjs-render-monitor" style="display: block; height: 153px; width: 306px;"></canvas>
+                                                    <div id="south-america-legend"><div class="report-chart"><div class="d-flex justify-content-between mx-4 mx-xl-5 mt-3"><div class="d-flex align-items-center"><div class="mr-3" style="width:20px; height:20px; border-radius: 50%; background-color: #4B49AC"></div><p class="mb-0">Offline sales</p></div><p class="mb-0">495343</p></div><div class="d-flex justify-content-between mx-4 mx-xl-5 mt-3"><div class="d-flex align-items-center"><div class="mr-3" style="width:20px; height:20px; border-radius: 50%; background-color: #FFC100"></div><p class="mb-0">Online sales</p></div><p class="mb-0">630983</p></div><div class="d-flex justify-content-between mx-4 mx-xl-5 mt-3"><div class="d-flex align-items-center"><div class="mr-3" style="width:20px; height:20px; border-radius: 50%; background-color: #248AFD"></div><p class="mb-0">Returns</p></div><p class="mb-0">290831</p></div></div></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a class="carousel-control-prev" href="#detailedReports" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#detailedReports" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-4 stretch-card grid-margin">
+                <div class="row">
+                    <div class="col-md-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="card-title">Charts</p>
+                                <div class="charts-data">
+                                    <div class="mt-3">
+                                        <p class="mb-0">Data 1</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="progress progress-md flex-grow-1 mr-4">
+                                                <div class="progress-bar bg-inf0" role="progressbar" style="width: 95%" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                            <p class="mb-0">5k</p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3">
+                                        <p class="mb-0">Data 2</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="progress progress-md flex-grow-1 mr-4">
+                                                <div class="progress-bar bg-info" role="progressbar" style="width: 35%" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                            <p class="mb-0">1k</p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3">
+                                        <p class="mb-0">Data 3</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="progress progress-md flex-grow-1 mr-4">
+                                                <div class="progress-bar bg-info" role="progressbar" style="width: 48%" aria-valuenow="48" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                            <p class="mb-0">992</p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3">
+                                        <p class="mb-0">Data 4</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="progress progress-md flex-grow-1 mr-4">
+                                                <div class="progress-bar bg-info" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                            <p class="mb-0">687</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 stretch-card grid-margin grid-margin-md-0">
+                        <div class="card data-icon-card-primary">
+                            <div class="card-body">
+                                <p class="card-title text-white">Number of Meetings</p>
+                                <div class="row">
+                                    <div class="col-8 text-white">
+                                        <h3>34040</h3>
+                                        <p class="text-white font-weight-500 mb-0">The total number of sessions within the date range.It is calculated as the sum . </p>
+                                    </div>
+                                    <div class="col-4 background-icon">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <!-- content-wrapper ends -->
+    <!-- partial:partials/_footer.html -->
+    <footer class="footer">
+        <div class="d-sm-flex justify-content-center justify-content-sm-between">
+            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2021.  Premium <a href="https://www.bootstrapdash.com/" target="_blank">Bootstrap admin template</a> from BootstrapDash. All rights reserved.</span>
+            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted &amp; made with <i class="ti-heart text-danger ml-1"></i></span>
+        </div>
+    </footer>
+    <!-- partial -->
+</div>
+
+@* Biểu đồ *@
+<script>
+    var xValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11,12];
+
+    new Chart("myChart", {
+        type: "line",
+        data: {
+            labels: xValues,
+            datasets: [{
+                data: [ @ViewBag.T1, @ViewBag.T2,@ViewBag.T3,@ViewBag.T4,@ViewBag.T5,@ViewBag.T6,@ViewBag.T7, @ViewBag.T8,@ViewBag.T9,@ViewBag.T10,@ViewBag.T11,@ViewBag.T12],
+                borderColor: "blue",
+                fill: false
+            }]
+        },
+        options: {
+            legend: { display: false }
+        }
+    });
+</script>
+<script>
+    var xValues = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"];
+    var yValues = [ @ViewBag.tongtien1,  @ViewBag.tongtien2, @ViewBag.tongtien3, @ViewBag.tongtien4, @ViewBag.tongtien5, @ViewBag.tongtien6, @ViewBag.tongtien7,  @ViewBag.tongtien8, @ViewBag.tongtien9, @ViewBag.tongtien10, @ViewBag.tongtien11, @ViewBag.tongtien12];
+
+
+    new Chart("myChart1", {
+        type: "bar",
+        data: {
+            labels: xValues,
+            datasets: [{
+                backgroundColor: "blue",
+                data: yValues
+            }]
+        },
+        options: {
+            legend: { display: false },
+            title: {
+                display: true,
+                text: "Biểu đồ thống kê doanh thu năm 2021"
+            }
+        }
+    });
+</script>

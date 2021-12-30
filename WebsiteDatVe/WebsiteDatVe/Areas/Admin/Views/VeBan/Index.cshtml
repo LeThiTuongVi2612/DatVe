@@ -1,0 +1,98 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@{
+    List<long> listMaChuyenBay = ViewBag.MaChuyenBay;
+    List<string> listDiemDi = ViewBag.DiemDi;
+    List<string> listDiemDen = ViewBag.DiemDen;
+    List<string> listMayBay = ViewBag.MayBay;
+    List<int> listTongGheThuongGia = ViewBag.TongGheThuongGia;
+    List<int> listTongGheHangNhat = ViewBag.TongGheHangNhat;
+    List<int> listTongGhePTDB = ViewBag.TongGhePTDB;
+    List<int> listTongGhePT = ViewBag.TongGhePT;
+    List<int> listThuongGiaDB = ViewBag.ThuongGiaDB;
+    List<int> listHangNhatDB = ViewBag.HangNhatDB;
+    List<int> listPTDBDB = ViewBag.PTDBDB;
+    List<int> listPTDB = ViewBag.PTDB;
+    List<double> listDoanhThu = ViewBag.DoanhThu;
+}
+
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Quản lý vé đã bán</h4>
+        <p class="card-description">
+
+        </p>
+
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Tuỳ chọn tìm kiếm
+                </button>
+                <div class="dropdown-menu" style="">
+                    <a class="dropdown-item" href="#" onclick="searchByMaChuyenBay()">Mã chuyến bay</a>
+                    <a class="dropdown-item" href="#" onclick="searchByDiemDi()">Điểm đi</a>
+                    <a class="dropdown-item" href="#" onclick="searchByDiemDen()">Điểm đến</a>
+                    <a class="dropdown-item" href="#" onclick="searchByMayBay()">Máy bay</a>
+                </div>
+            </div>
+            <input id="searchKey" type="text" class="form-control" aria-label="Text input with dropdown button">
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Mã chuyến bay</th>
+                        <th>Điểm đi</th>
+                        <th>Điểm đến</th>
+                        <th>Máy bay</th>
+                        <th>Thương gia</th>
+                        <th>Hạng nhất</th>
+                        <th>Phổ thông đặc biệt</th>
+                        <th>Phổ thông</th>
+                        <th>Doanh thu</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < listMaChuyenBay.Count; i++)
+                    {
+                        <tr>
+                            <td>@listMaChuyenBay[i]</td>
+                            <td>@listDiemDi[i]</td>
+                            <td>@listDiemDen[i]</td>
+                            <td>@listMayBay[i]</td>
+                            <td>@listThuongGiaDB[i]/@listTongGheThuongGia[i]</td>
+                            <td>@listHangNhatDB[i]/@listTongGheHangNhat[i]</td>
+                            <td>@listPTDBDB[i]/@listTongGhePTDB[i]</td>
+                            <td>@listPTDB[i]/@listTongGhePT[i]</td>
+                            <td>@listDoanhThu[i]</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    function searchByMaChuyenBay() {
+        var searchKey = $('#searchKey').val();
+        window.location.replace("/Admin/VeBan/Search/?searchKey=" + searchKey + "&option=1");
+    }
+
+    function searchByDiemDi() {
+        var searchKey = $('#searchKey').val();
+        window.location.replace("/Admin/VeBan/Search/?searchKey=" + searchKey + "&option=2");
+    }
+    function searchByDiemDen() {
+        var searchKey = $('#searchKey').val();
+        window.location.replace("/Admin/VeBan/Search/?searchKey=" + searchKey + "&option=3");
+    }
+    function searchByMayBay() {
+        var searchKey = $('#searchKey').val();
+        window.location.replace("/Admin/VeBan/Search/?searchKey=" + searchKey + "&option=4");
+    }
+</script>

@@ -1,0 +1,127 @@
+﻿.search-result{
+    width:100%;
+    height: 100%;
+    background: var(--light-blue);
+    font-size: 1.6rem;
+    padding: 3rem 17rem;
+}
+
+.search-info{
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    box-shadow: rgb(3,18,26,0.2) 0px 1px 2px;
+    padding:3rem;
+    border-radius:0.5rem;
+}
+
+.search-info h3{
+    margin-bottom:1.5rem;
+    font-size:2.5rem;
+}
+
+.search-info button{
+    padding: 1rem 2.25rem;
+    background: #fff;
+    font-size: 1.6rem;
+    border-radius:0.5rem;
+    cursor: pointer;
+    color: var(--blue);
+    font-weight: 700;
+    border: var(--blue) 1px solid;
+}
+
+.search-info button i{
+    margin-right: 1rem; 
+}
+
+.search-filter{
+    display:flex;
+    margin: 2rem 0; 
+    gap:2rem;
+    align-items: center;
+}
+
+.search-filter .item{
+    border-radius: 100px;
+    padding:1rem 1.5rem;
+    box-shadow: rgb(3,18,26,0.2) 0px 1px 2px;
+    background: #fff;
+    cursor:pointer;
+}
+
+.ticket{
+    box-shadow: rgb(3,18,26,0.2) 0px 1px 2px;
+    background: #fff;
+    border-radius:0.5rem;
+    margin-bottom: 2rem;
+    position:relative;
+}
+
+.ticket-content{
+    display:flex;
+    justify-content: space-between;
+    padding:3rem;
+}
+
+.ticket-content img{
+    width: 80px;
+}
+
+.ticket-content .center{
+    display:flex;
+    justify-content: space-between;
+    gap:2rem;
+}
+
+.ticket-content .right .icon{
+    color: var(--blue);
+    font-size:2rem;
+    text-align:right;
+    margin-bottom:1rem;
+}
+
+.ticket-content .right i{
+    cursor:pointer;
+}
+
+.ticket-content .right h3{
+    color: red
+}
+
+.ticket-content .right button{
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #fff;
+    background: var(--blue);
+    padding: 1.25rem;
+    width:100%;
+    border-radius: 0.5rem;
+    margin-top:1rem;
+    cursor:pointer;
+}
+
+.center-item{
+    text-align: center;
+}
+
+.center-item h3{
+    margin-bottom:1rem;
+}
+
+.center-item span{
+    color: #666;
+}
+
+.ticket-option{
+    display:flex;
+    gap:2rem;
+    padding:2rem 3rem;
+    border-top: var(--light-blue) dashed 3px;
+}
+
+.ticket-option p{
+    cursor: pointer;
+    font-weight:600;
+}

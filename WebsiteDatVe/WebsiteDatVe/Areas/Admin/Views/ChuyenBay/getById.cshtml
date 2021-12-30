@@ -1,0 +1,159 @@
+﻿@model WebsiteDatVe.Models.ChuyenBay
+@{
+    ViewBag.Title = "getById";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card-body">
+    <h4 class="card-title">Thêm chuyến bay mới</h4>
+    <p class="card-description">
+        Bạn hãy điền thông tin vào form sau
+    </p>
+    <form class="forms-sample">
+        <div class="form-group row">
+            <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Điểm đi</label>
+            <div class="col-sm-9">
+                <select data-select class="form-control" id="DiemDi">
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="exampleInputEmail2" class="col-sm-3 col-form-label">Điểm đến</label>
+            <div class="col-sm-9">
+                <select data-select class="form-control place" id="DiemDen">
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="exampleInputMobile" class="col-sm-3 col-form-label">Thời gian đi</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control place" id="ThoiGianDi" placeholder="yyyy/mm/dd">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="exampleInputPassword2" class="col-sm-3 col-form-label">Thời gian đến</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="ThoiGianDen" placeholder="yyyy/mm/dd">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="exampleInputConfirmPassword2" class="col-sm-3 col-form-label">Mã máy bay</label>
+            <div class="col-sm-9">
+                <select data-select class="form-control place" id="MaMayBay">
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="exampleInputConfirmPassword2" class="col-sm-3 col-form-label">Giá vé</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="GiaVe" placeholder="200000" value="@Model.Gia">
+            </div>
+        </div>
+
+        <div type="submit" class="btn btn-primary mr-2" onclick="Edit()">Submit</div>
+        <div class="btn btn-light" onclick="BackToChuyenBay()">Cancel</div>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function () {
+        //Get dia diem cho combobox
+        getDiaDiem();
+        //Get ma may bay cho combobox
+        getMaMayBay();
+
+        //Load thoi gian di va den tu model
+        flatpickr("#ThoiGianDi", {
+            minDate: "today",
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            /*        dateFormat: "d-m-Y",*/
+            defaultDate: "@Model.ThoiGianDi.Value.Year-@Model.ThoiGianDi.Value.Month-@Model.ThoiGianDi.Value.Day"
+                + " @Model.ThoiGianDi.Value.Hour:@Model.ThoiGianDi.Value.Minute",
+        });
+
+        flatpickr("#ThoiGianDen", {
+                    minDate: "today",
+                    enableTime: true,
+                    dateFormat: "Y-m-d H:i",
+                    defaultDate: "@Model.ThoiGianDen.Value.Year-@Model.ThoiGianDen.Value.Month-@Model.ThoiGianDen.Value.Day"
+                + " @Model.ThoiGianDen.Value.Hour:@Model.ThoiGianDen.Value.Minute",
+                    /*                dateFormat: "d-m-Y",*/
+                });
+    })
+
+    function getDiaDiem() {
+        $.ajax({
+            type: 'get',
+            url: '/ChuyenBay/getDiaDiem',
+            success: function (data) {
+                $.each(data.lstDiaDiem, function (k, v) {
+                    var optionDiemDi = '';
+                    var optionDiemDen = '';
+                    if (v.MaSanBay == @Model.DiemDi) {
+                        optionDiemDi = `<option value="` + v.MaSanBay + `" selected>` + v.NoiDung + `</option>`;
+                    } else {
+                        optionDiemDi = `<option value="` + v.MaSanBay + `">` + v.NoiDung + `</option>`;
+                    }
+
+                    if (v.MaSanBay == @Model.DiemDen) {
+                        optionDiemDen = `<option value="` + v.MaSanBay + `" selected>` + v.NoiDung + `</option>`;
+                    } else {
+                        optionDiemDen = `<option value="` + v.MaSanBay + `">` + v.NoiDung + `</option>`;
+                    }
+
+                    $('#DiemDi').append(optionDiemDi);
+                    $('#DiemDen').append(optionDiemDen);
+                })
+            }
+        })
+    }
+
+    function getMaMayBay() {
+        $.ajax({
+            type: 'get',
+            url: '/ChuyenBay/getMaMayBay',
+            success: function (data) {
+                $.each(data.lstMayBay, function (k, v) {
+                    var option = '';
+                    if ("@Model.MaMayBay".localeCompare(v.MaMayBay)) {
+                        option = `<option value="` + v.MaMayBay + `" selected>` + v.NoiDung + `</option>`;
+                    } else {
+                        option = `<option value="` + v.MaMayBay + `">` + v.NoiDung + `</option>`;
+                    }
+                    $('#MaMayBay').append(option);
+                })
+            }
+        })
+    }
+
+    function BackToChuyenBay() {
+        window.location.replace("@Request.Url.Scheme://@Request.Url.Host:@Request.Url.Port/Admin/ChuyenBay/Index");
+    }
+
+    function Edit() {
+        var chuyenBay = {
+            MaChuyenBay: @Model.MaChuyenBay,
+            DiemDi: $('#DiemDi').val(),
+            DiemDen: $('#DiemDen').val(),
+            ThoiGianDi: $('#ThoiGianDi').val(),
+            ThoiGianDen: $('#ThoiGianDen').val(),
+            MaMayBay: $('#MaMayBay').val(),
+            Gia: $('#GiaVe').val(),
+        };
+        $.ajax({
+            url: "/ChuyenBay/Update",
+            data: JSON.stringify(chuyenBay),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                window.location.replace("@Request.Url.Scheme://@Request.Url.Host:@Request.Url.Port/Admin/ChuyenBay/Index");
+                @*alert(result);*@
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+    }
+</script>

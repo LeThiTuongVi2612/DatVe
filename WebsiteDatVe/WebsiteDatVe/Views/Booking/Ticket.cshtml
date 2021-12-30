@@ -1,0 +1,162 @@
+﻿@model WebsiteDatVe.Models.Ve
+
+@{
+    ViewBag.Title = "Ticket";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="ticket-wrap">
+    <input hidden id="txtMaVe" value="@Model.MaVe"/>
+    <div class="e-ticket">
+        <div class="top">
+            <div class="qr">
+                <img src="~/Assets/images/DlgOLIW.png" />
+            </div>
+            <div class="content">
+                <div class="date-time">
+                    <img class="branch" src="@Model.ChuyenBay.MayBay.HangBay.Logo" />
+                    <h3>@Model.ChuyenBay.ThoiGianDi.GetValueOrDefault().ToString("D", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</h3>
+                    <div class="time">
+                        <div>
+                            <h3>@Model.ChuyenBay.ThoiGianDi.GetValueOrDefault().ToString("hh:MM")</h3>
+                            <p>@ViewBag.DiemDi</p>
+                        </div>
+                        <div>
+                            ---
+                        </div>
+                        <div>
+                            <h3>@Model.ChuyenBay.ThoiGianDen.GetValueOrDefault().ToString("hh:MM")</h3>
+                            <p>@ViewBag.DiemDen</p>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="info">
+                    <p class="title">Mã chuyến bay</p>
+                    <p>@Model.MaChuyenBay</p>
+                    <p class="title">Hạng vé</p>
+                    <p>@Model.HangVe</p>
+                </div>
+            </div>
+        </div>
+        <div class="middle">
+            <div class="item">
+                <i class="fas fa-address-card"></i>
+                <p>Trình CMND/hộ chiếu và vé khi làm thủ tục bay</p>
+            </div>
+            <div class="item">
+                <i class="fas fa-clock"></i>
+                <p>Làm thủ tục ít nhất 90 phút trước giờ khởi hành</p>
+            </div>
+            <div class="item">
+                <i class="fas fa-info-circle"></i>
+                <p>Giờ hiển thị trên vé là giờ sân bay địa phương</p>
+            </div>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Tên hành khách</th>
+                    <th>Loại vé</th>
+                </tr>
+            </thead>
+            <tbody id="tblKhach">
+
+            </tbody>
+        </table>
+
+    </div>
+    <div class="option">
+        @if (Model.TinhTrang == "Canceled")
+        {
+            <button class="btn-primary" disabled>Đã huỷ</button>
+        }
+        @if (Model.TinhTrang == "request")
+        {
+            <button class="btn-primary" disabled>Đã gửi yêu cầu hủy</button>
+        }
+        else
+        {
+            <button class="btn-primary" id="btnHuy">Hủy vé</button>
+            <button class="btn-primary" style="margin-left: 2rem; color: var(--blue) !important; background: #fff !important; box-shadow: rgb(3,18,26,0.2) 0px 1px 2px; " id="btnChange">Thay đổi thông tin</button>
+        }
+
+
+    </div>
+</div>
+
+
+<div class="modal" id="modalXacNhan">
+    <div class="modal-container">
+        <div class="title">
+            <h3>CẢNH BÁO</h3>
+        </div>
+        <div class="body">
+            <p>Bạn có chắc chắn muốn hủy vé?</p>
+        </div>
+        <div class="option">
+            <button class="btn-primary" id="btnXacNhan">Xác nhận</button>
+            <button class="btn-primary" id="btnThoat" style="margin-left: 2rem; color: var(--blue) !important; background: #fff !important; box-shadow: rgb(3,18,26,0.2) 0px 1px 2px; ">Thoát</button>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+            getKhachHang();
+        })
+
+        function getKhachHang() {
+            $.ajax({
+                type: 'get',
+                url: '/Booking/getKhachHang',
+                data: {
+                    mave: $('#txtMaVe').val()
+                },
+                success: function (data) {
+                    $.each(data.lst, function (k, v) {
+                        var tr = `<tr>
+                                        <td>`+(k+1)+`</td>
+                                        <td>`+v.HoTen +`</td>
+                                        <td>`+ v.LoaiKhachHang+`</td>
+                                  </tr>`;
+                        $('#tblKhach').append(tr);
+                    })
+
+
+                }
+            })
+        }
+
+        $('#btnHuy').click(function () {
+            $('#modalXacNhan').addClass('active')
+        })
+        $('#btnThoat').click(function () {
+            $('#modalXacNhan').removeClass('active')
+        })
+
+        $('#btnXacNhan').click(function () {
+            $.ajax({
+                type: 'post',
+                url: '/Booking/HuyVe',
+                data: {
+                    mave: $('#txtMaVe').val()
+                },
+                success: function (data) {
+                    if (data.code == 200) {
+                        alert("Yêu cầu hủy vé của bạn đã được gửi!");
+                        $("#btnHuy").prop("disabled", true);
+                        $("#btnHuy").html("Đã gửi yêu cầu hủy");
+                        $('#modalXacNhan').removeClass('active')
+                        $("#btnChange").addClass("hide")
+                    }
+                }
+            })
+        })
+
+    </script>
+
+}

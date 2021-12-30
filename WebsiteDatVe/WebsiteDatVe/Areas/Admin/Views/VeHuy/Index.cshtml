@@ -1,0 +1,354 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card-table" style="background-color: #f5f7ff; width:100%">
+    <div class="card" style=" margin:24px 16px;">
+        <div class="card-body">
+            <h4 class="card-title">Quản lý yêu cầu huỷ vé</h4>
+            
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Tuỳ chọn tìm kiếm
+                    </button>
+                    <div class="dropdown-menu" style="">
+                        <a class="dropdown-item" href="#" onclick="searchByMaVe()">Mã vé</a>
+                        <a class="dropdown-item" href="#" onclick="searchByMaChuyenBay()">Mã chuyến bay</a>
+                        <a class="dropdown-item" href="#" onclick="searchByHangVe()">Hạng vé</a>
+                        <a class="dropdown-item" href="#" onclick="searchByTenKH()">Tên khách hàng</a>
+                        <a class="dropdown-item" href="#" onclick="searchByNgayDat()">Ngày đặt</a>
+                    </div>
+                </div>
+                <input id="searchKey" type="text" class="form-control" aria-label="Text input with dropdown button">
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Mã vé</th>
+                            <th>Mã chuyến bay</th>
+                            <th>Hạng vé</th>
+                            <th>Số lượng ghế</th>
+                            <th>Tên khách hàng</th>
+                            <th>Ngày đặt</th>
+                            <th>Tổng tiền</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tbody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Information Modal HTML -->
+<div id="infoDialog" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form>
+                <div class="modal-header">
+                    <h4 class="modal-title">Thông báo</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p id="titleInfo"></p>
+                    <p class="text-info"><small id="contentInfo"></small></p>
+                </div>
+                <div class="modal-footer">
+                    <div type="submit" id="confirmOk" class="btn btn-info">Oke</div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section jsFooter{
+    <script>
+        $(document).ready(function () {
+            loadData();
+        });
+
+        function loadData() {
+            $.ajax({
+                url: "/VeHuy/List",
+                type: "GET",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    var html = '';
+                    $.each(result, function (key, item) {
+                        html += '<tr>';
+                        html += '<td>' + item.MaVe + '</td>';
+                        html += '<td>' + item.MaChuyenBay + '</td>';
+                        html += '<td>' + item.HangVe + '</td>';
+                        html += '<td>' + item.SoLuongGhe + '</td>';
+                        html += '<td>' + item.TenKhachHang + '</td>';
+                        html += '<td>' + item.NgayDat + '</td>';
+                        html += '<td>' + item.TongTien + '</td>';
+                        var ngayDat = new Date(item.NgayDat);
+                        var hienTai = new Date();
+                        if (ngayDat.getTime() < hienTai.getTime()) {
+                            html += '<td><a href="#" class="badge badge-danger" style="border:none"'
+                                + ' onclick="Caution(\'' + item.MaVe + '\')">Quá hạn duyệt</a></td>';
+                        } else {
+                            html += '<td><a href="#" class="badge badge-success" style="border:none"'
+                                + ' onclick="Accept(\'' + item.MaVe + '\')">Duyệt</a></td>';
+                        }
+
+                        html += '</tr>';
+                    });
+                    $('.tbody').html(html);
+                },
+                error: function (errormessage) {
+                    alert(errormessage.responseText);
+                }
+            });
+        }
+
+        function showInfo(title, content) {
+            var onConfirm = function () {
+                modal.modal("hide");
+                return true;
+            };
+
+            var modal = $("#infoDialog");
+            modal.modal("show");
+            $("#titleInfo").html(title);
+            $("#contentInfo").html(content);
+            $("#confirmOk").unbind().one('click', onConfirm);
+        }
+
+
+        function Accept(maVe) {
+        var veHuy = {
+            MaVe: maVe,
+        };
+        $.ajax({
+            url: "/VeHuy/Accept",
+            data: JSON.stringify(veHuy),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                if (result.log == "OK") {
+                    window.location.replace("@Request.Url.Scheme://@Request.Url.Host:@Request.Url.Port/Admin/VeHuy/Index");
+                } else {
+                    showInfo("Đã có lỗi xảy ra",
+                        "Bạn hãy thử load lại trang và duyệt lại vé nhé"
+                    );
+                }
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+        }
+
+        function Caution(maVe) {
+            showInfo("Vé " + maVe + " đã quá hạn cho phép huỷ",
+                "Bạn hãy chọn vé khác để duyệt nhé"
+            );
+        }
+
+        //Tìm kiếm bằng mã chuyến bay
+        function searchByMaChuyenBay() {
+            var searchKey = $('#searchKey').val();
+            //Delete dữ liệu hiện tại và tiến hành search lại dữ liệu
+            $('.tbody').html("");
+            $.ajax({
+                url: "/VeHuy/SearchByMaChuyenBay?searchKey=" + searchKey,
+                type: "POST",
+                contentType: "html",
+                success: function (result) {
+                    var html = '';
+                    $.each(result, function (key, item) {
+                        html += '<tr>';
+                        html += '<td>' + item.MaVe + '</td>';
+                        html += '<td>' + item.MaChuyenBay + '</td>';
+                        html += '<td>' + item.HangVe + '</td>';
+                        html += '<td>' + item.SoLuongGhe + '</td>';
+                        html += '<td>' + item.TenKhachHang + '</td>';
+                        html += '<td>' + item.NgayDat + '</td>';
+                        html += '<td>' + item.TongTien + '</td>';
+                        var ngayDat = new Date(item.NgayDat);
+                        var hienTai = new Date();
+                        if (ngayDat.getTime() < hienTai.getTime()) {
+                            html += '<td><a href="#" class="badge badge-danger" style="border:none"'
+                                + ' onclick="Caution(\'' + item.MaVe + '\')">Quá hạn duyệt</a></td>';
+                        } else {
+                            html += '<td><a href="#" class="badge badge-success" style="border:none"'
+                                + ' onclick="Accept(\'' + item.MaVe + '\')">Duyệt</a></td>';
+                        }
+
+                        html += '</tr>';
+                    });
+                    $('.tbody').html(html);
+                },
+                error: function (errormessage) {
+                    alert(errormessage.responseText);
+                }
+            });
+        }
+
+        //Tìm kiếm bằng hạng vé
+        function searchByHangVe() {
+            var searchKey = $('#searchKey').val();
+            $('.tbody').html("");
+            $.ajax({
+                url: "/VeHuy/SearchByHangVe",
+                data: { 'searchKey': searchKey },
+                type: "post",
+                success: function (result) {
+                    var html = '';
+                    $.each(result, function (key, item) {
+                        html += '<tr>';
+                        html += '<td>' + item.MaVe + '</td>';
+                        html += '<td>' + item.MaChuyenBay + '</td>';
+                        html += '<td>' + item.HangVe + '</td>';
+                        html += '<td>' + item.SoLuongGhe + '</td>';
+                        html += '<td>' + item.TenKhachHang + '</td>';
+                        html += '<td>' + item.NgayDat + '</td>';
+                        html += '<td>' + item.TongTien + '</td>';
+                        var ngayDat = new Date(item.NgayDat);
+                        var hienTai = new Date();
+                        if (ngayDat.getTime() < hienTai.getTime()) {
+                            html += '<td><a href="#" class="badge badge-danger" style="border:none"'
+                                + ' onclick="Caution(\'' + item.MaVe + '\')">Quá hạn duyệt</a></td>';
+                        } else {
+                            html += '<td><a href="#" class="badge badge-success" style="border:none"'
+                                + ' onclick="Accept(\'' + item.MaVe + '\')">Duyệt</a></td>';
+                        }
+
+                        html += '</tr>';
+                    });
+                    $('.tbody').html(html);
+                },
+                error: function (message) {
+                    alert(message.contentType);
+                }
+            });
+        }
+
+        //Tìm kiếm bằng tên khách hàng
+        function searchByTenKH() {
+            var searchKey = $('#searchKey').val();
+            $('.tbody').html("");
+            $.ajax({
+                url: "/VeHuy/SearchByTenKH",
+                data: { 'searchKey': searchKey },
+                type: "post",
+                success: function (result) {
+                    var html = '';
+                    $.each(result, function (key, item) {
+                        html += '<tr>';
+                        html += '<td>' + item.MaVe + '</td>';
+                        html += '<td>' + item.MaChuyenBay + '</td>';
+                        html += '<td>' + item.HangVe + '</td>';
+                        html += '<td>' + item.SoLuongGhe + '</td>';
+                        html += '<td>' + item.TenKhachHang + '</td>';
+                        html += '<td>' + item.NgayDat + '</td>';
+                        html += '<td>' + item.TongTien + '</td>';
+                        var ngayDat = new Date(item.NgayDat);
+                        var hienTai = new Date();
+                        if (ngayDat.getTime() < hienTai.getTime()) {
+                            html += '<td><a href="#" class="badge badge-danger" style="border:none"'
+                                + ' onclick="Caution(\'' + item.MaVe + '\')">Quá hạn duyệt</a></td>';
+                        } else {
+                            html += '<td><a href="#" class="badge badge-success" style="border:none"'
+                                + ' onclick="Accept(\'' + item.MaVe + '\')">Duyệt</a></td>';
+                        }
+
+                        html += '</tr>';
+                    });
+                    $('.tbody').html(html);
+                },
+                error: function (message) {
+                    alert(message.contentType);
+                }
+            });
+        }
+
+        //Tìm kiếm bằng mã vé
+        function searchByMaVe() {
+            var searchKey = $('#searchKey').val();
+            $('.tbody').html("");
+            $.ajax({
+                url: "/VeHuy/SearchByMaVe",
+                data: { 'searchKey': searchKey },
+                type: "post",
+                success: function (result) {
+                    var html = '';
+                    $.each(result, function (key, item) {
+                        html += '<tr>';
+                        html += '<td>' + item.MaVe + '</td>';
+                        html += '<td>' + item.MaChuyenBay + '</td>';
+                        html += '<td>' + item.HangVe + '</td>';
+                        html += '<td>' + item.SoLuongGhe + '</td>';
+                        html += '<td>' + item.TenKhachHang + '</td>';
+                        html += '<td>' + item.NgayDat + '</td>';
+                        html += '<td>' + item.TongTien + '</td>';
+                        var ngayDat = new Date(item.NgayDat);
+                        var hienTai = new Date();
+                        if (ngayDat.getTime() < hienTai.getTime()) {
+                            html += '<td><a href="#" class="badge badge-danger" style="border:none"'
+                                + ' onclick="Caution(\'' + item.MaVe + '\')">Quá hạn duyệt</a></td>';
+                        } else {
+                            html += '<td><a href="#" class="badge badge-success" style="border:none"'
+                                + ' onclick="Accept(\'' + item.MaVe + '\')">Duyệt</a></td>';
+                        }
+
+                        html += '</tr>';
+                    });
+                    $('.tbody').html(html);
+                },
+                error: function (message) {
+                    alert(message.contentType);
+                }
+            });
+        }
+
+        //Tìm kiếm bằng ngày đặt
+         function searchByNgayDat() {
+            var searchKey = $('#searchKey').val();
+            $('.tbody').html("");
+            $.ajax({
+                url: "/VeHuy/SearchByNgayDat",
+                data: { 'searchKey': searchKey },
+                type: "post",
+                success: function (result) {
+                    var html = '';
+                    $.each(result, function (key, item) {
+                        html += '<tr>';
+                        html += '<td>' + item.MaVe + '</td>';
+                        html += '<td>' + item.MaChuyenBay + '</td>';
+                        html += '<td>' + item.HangVe + '</td>';
+                        html += '<td>' + item.SoLuongGhe + '</td>';
+                        html += '<td>' + item.TenKhachHang + '</td>';
+                        html += '<td>' + item.NgayDat + '</td>';
+                        html += '<td>' + item.TongTien + '</td>';
+                        var ngayDat = new Date(item.NgayDat);
+                        var hienTai = new Date();
+                        if (ngayDat.getTime() < hienTai.getTime()) {
+                            html += '<td><a href="#" class="badge badge-danger" style="border:none"'
+                                + ' onclick="Caution(\'' + item.MaVe + '\')">Quá hạn duyệt</a></td>';
+                        } else {
+                            html += '<td><a href="#" class="badge badge-success" style="border:none"'
+                                + ' onclick="Accept(\'' + item.MaVe + '\')">Duyệt</a></td>';
+                        }
+
+                        html += '</tr>';
+                    });
+                    $('.tbody').html(html);
+                },
+                error: function (message) {
+                    alert(message.contentType);
+                }
+            });
+        }
+    </script>
+}
+

@@ -1,0 +1,195 @@
+﻿
+@{
+    ViewBag.Title = "CreateAirline";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card-table" style="background-color: #f5f7ff; width:100%">
+    <div class="card" style=" margin:auto; width:70%; top:24px ">
+        <div class="card-body">
+            <h4 class="card-title">
+                <a href="/Admin/TrangChu/Airline">Quản lý hãng bay</a> >
+                <span class="card-description">
+                    Tạo mới
+                </span>
+            </h4>
+            <div class="forms-sample">
+                <div class="form-group">
+                    <label for="exampleInputName1">Tên hãng bay</label>
+                    <input type="text" class="form-control" id="hangBay" placeholder="Tên hãng bay">
+                </div>
+                <div class="form-group">
+                    <label>File upload</label>
+                    @*<input type="file" name="img[]" class="file-upload-default">*@
+                    <div class="input-group col-xs-12">
+                        <input type="file" class="form-control file-upload-info" accept="image/*" id="txtimg">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="w3-content w3-display-container" style="margin-bottom:1rem">
+                        <input id="txtMaBai" hidden />
+                        <div class="mySlides" style="object-fit:cover" id="imgPro"></div>
+                    </div>
+                </div>
+                <button class="btn btn-primary mr-2" id="btnDuyet">Thêm mới</button>
+                <a href="/Admin/TrangChu/Airline" class="btn btn-light">Thoát</a>
+
+</div>
+        </div>
+    </div>
+
+    
+</div>
+<div class="modal" id="modalDuyet">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Xác nhận</h5>
+                <button type="button" class="close" onclick="modalClose()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="btnMess">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnDongY">Đồng ý</button>
+                <button type="button" class="btn btn-secondary" onclick="modalClose()">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .w3-content, .w3-auto {
+        margin-left: 2px;
+        max-width: 500px;
+        float: left;
+    }
+
+    .w3-text-white, .w3-hover-text-white:hover {
+        color: #fff !important;
+    }
+
+    .mySlides {
+        display: none;
+        width: 495px;
+        
+    }
+    .mySlides > img{
+        width:100px;
+    }
+    .w3-left, .w3-right, .w3-badge {
+        cursor: pointer
+    }
+
+    .w3-badge {
+        height: 13px;
+        width: 13px;
+        padding: 0
+    }
+</style>
+<script>
+    var slideIndex = 1;
+    showDivs(slideIndex);
+
+    function plusDivs(n) {
+        showDivs(slideIndex += n);
+    }
+
+    function currentDiv(n) {
+        showDivs(slideIndex = n);
+    }
+
+    function showDivs(n) {
+        var i;
+        var x = document.getElementsByClassName("mySlides");
+        var dots = document.getElementsByClassName("demo");
+        if (n > x.length) { slideIndex = 1 }
+        if (n < 1) { slideIndex = x.length }
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+        }
+        for (i = 0; i < dots.length; i++) {
+            dots[i].className = dots[i].className.replace(" w3-white", "");
+        }
+        x[slideIndex - 1].style.display = "block";
+        dots[slideIndex - 1].className += " w3-white";
+    }
+
+
+</script>
+@section jsFooter{
+    <script>
+        var trangthai = 1;
+        var ma = $("#txtMaBai").val();
+        var img = "";
+        $(document).ready(function () {
+            $('#txtimg').change(function () {
+                if ($('#txtimg').val().length > 0) {
+                    if (window.FormData !== undefined) {
+                        var fileupload = $('#txtimg').get(0);
+                        var file = fileupload.files;
+                        var formdata = new FormData();
+                        formdata.append('file', file[0]);
+                        $.ajax({
+                            type: 'POST',
+                            url: '/TrangChu/XuLyFile ',
+                            contentType: false, //Khong co hear
+                            processData: false,//Khong Xu Ly Du Lieu
+                            data: formdata,
+                            success: function (ImageData) {
+                                $('#imgPro').append(`<img src="` + ImageData + `"/>`);
+                                img += ImageData;
+                                //location.reload();
+                            }
+                        });
+                    }
+                } else {
+                    alert("Vui lòng chọn file");
+                }
+            });
+        });
+
+        $('#btnDuyet').on('click', function () {
+            trangthai = 0;
+            if ($("#hangBay").val() != "") {
+                $('#btnMess').append('<p>Bạn chắc chắn thêm mới hãng bay?</p>');
+                $('#modalDuyet').show();
+            } else {
+                alert("Vui lòng nhập tên hãng bay!");
+            }
+        }); 
+
+        function modalClose() {
+            $('#modalDuyet').hide();
+
+        }
+        $('#btnDongY').click(function () {
+            //alert('Thành công')
+            //alert(ma);
+            $.ajax({
+                type: 'post',
+                url: '/Admin/TrangChu/AddAirline',
+                data: {
+                    TenHangBay: $("#hangBay").val(),
+                    Hinh: img,
+                },
+                success: function (data) {
+                    if (data.code == 200) {
+                        alert("Thao tác thành công");
+                        window.location = "/Admin/TrangChu/Airline";
+                    }
+                    else {
+                        alert("Thao tác thất bại!");
+                    }
+                }
+
+            });
+
+        });
+        
+    </script>
+}
+
+
